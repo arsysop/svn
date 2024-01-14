@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Automatic-Module-Name: ru.arsysop.svn.connector
+Bundle-ManifestVersion: 2
+Bundle-SymbolicName: ru.arsysop.svn.connector
+Bundle-Version: 0.1.0.qualifier
+Export-Package: ru.arsysop.svn.connector
+Require-Bundle: org.eclipse.core.runtime;bundle-version="3.18.0",
+ org.eclipse.osgi.services;bundle-version="3.8.0";resolution:=optional,
+ org.eclipse.team.svn.core;bundle-version="5.0.0",
+ wrapped.org.tmatesoft.svnkit.svnkit;bundle-version="1.10.11",
+ wrapped.org.tmatesoft.svnkit.svnkit-javahl16;bundle-version="1.10.11"
+Bundle-Name: %Bundle-Name
+Bundle-Vendor: %Bundle-Vendor
+Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-ActivationPolicy: lazy
