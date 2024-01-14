@@ -1,4 +1,6 @@
-###
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.0"?>
+<!--
 # Copyright (c) 2023, 2024 ArSysOp
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,13 +19,12 @@
 #
 # Contributors:
 #     ArSysOp - initial API and implementation 
-###
+-->
 
+<plugin>
 
-source.. = src/
-output.. = target/classes/
-bin.includes = META-INF/,\
-               .,\
-               src/,\
-               OSGI-INF/,\
-               plugin.xml
+	<extension point="org.eclipse.team.svn.core.svnconnector">
+		<svnconnector class="ru.arsysop.svn.connector.ConnectorFactory"/>
+	</extension>
+	
+</plugin>
