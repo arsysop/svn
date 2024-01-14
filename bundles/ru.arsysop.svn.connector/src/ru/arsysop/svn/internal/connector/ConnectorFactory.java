@@ -19,7 +19,7 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector;
+package ru.arsysop.svn.internal.connector;
 
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.team.svn.core.connector.ISVNConnector;
@@ -51,11 +51,12 @@ public final class ConnectorFactory implements ISVNConnectorFactory {
 	}
 
 	public String getClientVersion() {
-		return SVNClientImpl.newInstance().getVersion().toString(); // nurse this client instance
+		org.apache.subversion.javahl.types.Version version = SVNClientImpl.newInstance().getVersion(); // TODO: nurse this client instance
+		return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getPatch()); //$NON-NLS-1$
 	}
 
 	public String getVersion() {
-		return Platform.getBundle("wrapped.org.tmatesoft.svnkit.svnkit") //$NON-NLS-1$
+		return Platform.getBundle("org.tmatesoft.svnkit.svnkit") //$NON-NLS-1$
 				.getHeaders()
 				.get(org.osgi.framework.Constants.BUNDLE_VERSION);
 	}

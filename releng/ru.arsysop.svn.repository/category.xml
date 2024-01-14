@@ -25,4 +25,27 @@
       <category name="ru.arsysop.svn.connectors.category"/>
    </feature>
    <category-def name="ru.arsysop.svn.connectors.category" label="ArSysOp SVN Connectors"/>
+   <bundle id="antlr.antlr" />
+   <bundle id="com.jcraft.jsch.agentproxy.connector-factory" />
+   <bundle id="com.jcraft.jsch.agentproxy.core" />
+   <bundle id="com.jcraft.jsch.agentproxy.pageant" />
+   <bundle id="com.jcraft.jsch.agentproxy.sshagent" />
+   <bundle id="com.jcraft.jsch.agentproxy.svnkit-trilead-ssh2" />
+   <bundle id="com.jcraft.jsch.agentproxy.usocket-jna" />
+   <bundle id="com.jcraft.jsch.agentproxy.usocket-nc" />
+   <bundle id="com.trilead.trilead-ssh2" />
+   <bundle id="de.regnis.q.sequence.sequence-library" />
+   <bundle id="net.i2p.crypto.eddsa" />
+   <bundle id="net.java.dev.jna.jna-platform" />
+   <bundle id="net.java.dev.jna.jna" />
+   <bundle id="org.antlr.antlr-runtime" />
+   <bundle id="org.antlr.stringtemplate" />
+   <bundle id="org.apache.sshd.sshd-common" />
+   <bundle id="org.apache.sshdsshd-core" />
+   <bundle id="org.bouncycastle.bcpg-jdk15on" />
+   <bundle id="org.bouncycastle/bcpkix-jdk15on" />
+   <bundle id="org.lz4lz4-java" />
+   <bundle id="org.tmatesoft.sqljet.sqljet" />
+   <bundle id="org.tmatesoft.svnkit.svnkit-javahl16" />
+   <bundle id="org.tmatesoft.svnkit.svnkit" />   
 </site>

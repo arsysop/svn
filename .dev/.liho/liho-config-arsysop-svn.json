@@ -50,8 +50,6 @@
 		"    ArSysOp - initial API and implementation"
 	],
 	"excludes": [
-		"/target/",
-		"/subversive-connectors/",
-		"/OSGI-INF/"
+		"/target/"
 	]
 }

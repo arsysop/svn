@@ -32,13 +32,13 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>../ru.arsysop.svn.repository</module>
+		<module>../ru.arsysop.svn.target</module>
+
 		<module>../../bundles/ru.arsysop.svn.connector</module>
 		<module>../../features/ru.arsysop.svn.connectors.feature</module>
 		<module>../../features/ru.arsysop.svn.license.feature</module>
 		<module>../../tests/ru.arsysop.svn.connector.tests</module>
-
-		<module>../ru.arsysop.svn.repository</module>
-		<module>../ru.arsysop.svn.target</module>
 	</modules>
 
 </project>

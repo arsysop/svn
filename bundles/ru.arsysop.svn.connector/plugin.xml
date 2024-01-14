@@ -24,7 +24,7 @@
 <plugin>
 
 	<extension point="org.eclipse.team.svn.core.svnconnector">
-		<svnconnector class="ru.arsysop.svn.connector.ConnectorFactory"/>
+		<svnconnector class="ru.arsysop.svn.internal.connector.ConnectorFactory"/>
 	</extension>
 	
 </plugin>

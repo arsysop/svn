@@ -19,7 +19,7 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector;
+package ru.arsysop.svn.internal.connector;
 
 import java.io.OutputStream;
 import java.util.List;

@@ -19,13 +19,11 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.tests;
+package ru.arsysop.svn.internal.connector;
 
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.jupiter.api.Test;
-
-import ru.arsysop.svn.connector.ConnectorFactory;
 
 /**
  * Require platform running
