@@ -36,9 +36,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<qualifier.format>'v'yyyyMMdd-HHmm</qualifier.format>
 		<required-java-version>17</required-java-version>
-		<required-maven-version>3.9.4</required-maven-version>
+		<required-maven-version>3.6.3</required-maven-version>
 		<tycho.scmUrl>scm:git:https://github.com/arsysop/svn.git</tycho.scmUrl>
-		<tycho.version>4.0.4</tycho.version>
+		<tycho.version>4.0.1</tycho.version>
 
 		<tycho-snapshot-repo.url>https://repo.eclipse.org/content/repositories/tycho-snapshots/</tycho-snapshot-repo.url>
 		<eclipse-repo.url>https://repo.eclipse.org/content/repositories/cbi/</eclipse-repo.url>
