@@ -232,6 +232,24 @@
 					<type>jar</type>
 				</dependency>
 				<dependency>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+					<version>1.70</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcprov-jdk15on</artifactId>
+					<version>1.70</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>org.bouncycastle</groupId>
+					<artifactId>bcutil-jdk15on</artifactId>
+					<version>1.70</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
 					<groupId>org.lz4</groupId>
 					<artifactId>lz4-java</artifactId>
 					<version>1.4.1</version>
@@ -257,7 +275,7 @@
 				</dependency>
 			</dependencies>
 			<instructions><![CDATA[
-Bundle-Name:           Bundle derived from maven artifact ${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
+Bundle-Name:${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
 	version:               ${version_cleanup;${mvnVersion}}
 	Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
 	Bundle-Version:        ${version}
