@@ -39,6 +39,10 @@ jobs:
       with:
         java-version: '17'
         distribution: 'adopt'
+    - name: Set up Maven
+      uses: stCarolas/setup-maven@v4.5
+      with:
+        maven-version: 3.9.4  
     - name: Setup Maven
       run: echo "MAVEN_OPTS='-Xmx2048m'" > ~/.mavenrc
     - name: Cache maven repo
