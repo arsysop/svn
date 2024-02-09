@@ -19,7 +19,8 @@
 #
 # Contributors:
 #     ArSysOp - initial API and implementation 
---><target includeMode="feature" name="ru.arsysop.svn.target">
+-->
+<target includeMode="feature" name="ru.arsysop.svn.target">
 	<locations>
 		<location includeAllPlatforms="false" includeConfigurePhase="true" includeMode="planner" includeSource="true" type="InstallableUnit">
 			<repository location="https://download.eclipse.org/eclipse/updates/4.16/R-4.16-202006040540/"/>
@@ -30,99 +31,37 @@
 			<repository location="https://download.eclipse.org/technology/subversive//updates/nightly/latest/"/>
 			<unit id="org.eclipse.team.svn.feature.group" version="0.0.0"/>
 		</location>
-
 		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/downloads/latest-R/"/>
-			<unit id="org.junit" version="4.13.2.v20230809-1000"/>
-		</location>
-		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
-			<repository location="https://download.eclipse.org/tools/orbit/simrel/maven-osgi/release/latest/"/>
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.30.0/"/>
+			<unit id="bcpg" version="1.77.0"/>
+			<unit id="bcpkix" version="1.77.0"/>
+			<unit id="bcprov" version="1.77.0"/>
+			<unit id="bcutil" version="1.77.0"/>
 			<unit id="com.google.gson" version="0.0.0"/>
+			<unit id="com.sun.jna" version="5.13.0.v20230812-1000"/>
+			<unit id="com.sun.jna.platform" version="5.13.0"/>
+			<unit id="net.i2p.crypto.eddsa" version="0.3.0"/>
+			<unit id="org.antlr.runtime" version="3.5.3.v20230929-1400"/>
+			<unit id="org.apache.sshd.osgi" version="2.11.0"/>
 		</location>
-		<location includeDependencyDepth="none" includeDependencyScopes="compile" includeSource="true" missingManifest="error" type="Maven">
-			<dependencies>
-				<dependency>
-					<groupId>org.junit.jupiter</groupId>
-					<artifactId>junit-jupiter-api</artifactId>
-					<version>5.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.jupiter</groupId>
-					<artifactId>junit-jupiter-engine</artifactId>
-					<version>5.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.jupiter</groupId>
-					<artifactId>junit-jupiter-migrationsupport</artifactId>
-					<version>5.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.jupiter</groupId>
-					<artifactId>junit-jupiter-params</artifactId>
-					<version>5.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.platform</groupId>
-					<artifactId>junit-platform-commons</artifactId>
-					<version>1.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.platform</groupId>
-					<artifactId>junit-platform-engine</artifactId>
-					<version>1.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.platform</groupId>
-					<artifactId>junit-platform-launcher</artifactId>
-					<version>1.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.platform</groupId>
-					<artifactId>junit-platform-runner</artifactId>
-					<version>1.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.platform</groupId>
-					<artifactId>junit-platform-suite-api</artifactId>
-					<version>1.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.platform</groupId>
-					<artifactId>junit-platform-suite-commons</artifactId>
-					<version>1.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-					<version>5.10.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.opentest4j</groupId>
-					<artifactId>opentest4j</artifactId>
-					<version>1.3.0</version>
-					<type>jar</type>
-				</dependency>
-			</dependencies>
+		<location includeAllPlatforms="false" includeConfigurePhase="false" includeMode="planner" includeSource="true" type="InstallableUnit">
+			<repository location="https://download.eclipse.org/tools/orbit/simrel/orbit-aggregation/release/4.30.0/"/>
+			<unit id="junit-jupiter-api" version="5.10.1"/>
+			<unit id="junit-jupiter-engine" version="5.10.1"/>
+			<unit id="junit-jupiter-migrationsupport" version="5.10.1"/>
+			<unit id="junit-jupiter-params" version="5.10.1"/>
+			<unit id="junit-platform-commons" version="1.10.1"/>
+			<unit id="junit-platform-engine" version="1.10.1"/>
+			<unit id="junit-platform-launcher" version="1.10.1"/>
+			<unit id="junit-platform-runner" version="1.10.1"/>
+			<unit id="junit-platform-suite-api" version="1.10.1"/>
+			<unit id="junit-platform-suite-commons" version="1.10.1"/>
+			<unit id="junit-vintage-engine" version="5.10.1"/>
+			<unit id="org.junit" version="4.13.2.v20230809-1000"/>
+			<unit id="org.opentest4j" version="1.3.0"/>
 		</location>
-		<location includeDependencyDepth="none" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+		<location includeDependencyDepth="none" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="Error" type="Maven">
 			<dependencies>
-				<dependency>
-					<groupId>antlr</groupId>
-					<artifactId>antlr</artifactId>
-					<version>2.7.7</version>
-					<type>jar</type>
-				</dependency>
 				<dependency>
 					<groupId>com.jcraft</groupId>
 					<artifactId>jsch.agentproxy.connector-factory</artifactId>
@@ -149,12 +88,6 @@
 				</dependency>
 				<dependency>
 					<groupId>com.jcraft</groupId>
-					<artifactId>jsch.agentproxy.svnkit-trilead-ssh2</artifactId>
-					<version>0.0.9</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>com.jcraft</groupId>
 					<artifactId>jsch.agentproxy.usocket-jna</artifactId>
 					<version>0.0.9</version>
 					<type>jar</type>
@@ -162,6 +95,37 @@
 				<dependency>
 					<groupId>com.jcraft</groupId>
 					<artifactId>jsch.agentproxy.usocket-nc</artifactId>
+					<version>0.0.9</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>org.lz4</groupId>
+					<artifactId>lz4-java</artifactId>
+					<version>1.4.1</version>
+					<type>jar</type>
+				</dependency>
+			</dependencies>
+			<instructions><![CDATA[
+Bundle-Name:${mvnGroupId}:${mvnArtifactId}:${mvnVersion}
+	version:               ${version_cleanup;${mvnVersion}}
+	Bundle-SymbolicName:   ${mvnGroupId}.${mvnArtifactId}
+	Bundle-Version:        ${version}
+	Import-Package:        *;resolution:=optional
+	Export-Package:        *;version="${version}";-noimport:=true
+	DynamicImport-Package: *
+]]></instructions>
+		</location>
+		<location includeDependencyDepth="none" includeDependencyScopes="compile,provided,runtime" includeSource="true" missingManifest="generate" type="Maven">
+			<dependencies>
+				<dependency>
+					<groupId>antlr</groupId>
+					<artifactId>antlr</artifactId>
+					<version>2.7.7</version>
+					<type>jar</type>
+				</dependency>
+				<dependency>
+					<groupId>com.jcraft</groupId>
+					<artifactId>jsch.agentproxy.svnkit-trilead-ssh2</artifactId>
 					<version>0.0.9</version>
 					<type>jar</type>
 				</dependency>
@@ -178,81 +142,9 @@
 					<type>jar</type>
 				</dependency>
 				<dependency>
-					<groupId>net.i2p.crypto</groupId>
-					<artifactId>eddsa</artifactId>
-					<version>0.3.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>net.java.dev.jna</groupId>
-					<artifactId>jna-platform</artifactId>
-					<version>5.6.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>net.java.dev.jna</groupId>
-					<artifactId>jna</artifactId>
-					<version>5.6.0</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.antlr</groupId>
-					<artifactId>antlr-runtime</artifactId>
-					<version>3.4</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
 					<groupId>org.antlr</groupId>
 					<artifactId>stringtemplate</artifactId>
 					<version>3.2.1</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.sshd</groupId>
-					<artifactId>sshd-common</artifactId>
-					<version>2.9.2</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.apache.sshd</groupId>
-					<artifactId>sshd-core</artifactId>
-					<version>2.9.2</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcpg-jdk15on</artifactId>
-					<version>1.70</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcpkix-jdk15on</artifactId>
-					<version>1.70</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk15on</artifactId>
-					<version>1.70</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcprov-jdk15on</artifactId>
-					<version>1.70</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.bouncycastle</groupId>
-					<artifactId>bcutil-jdk15on</artifactId>
-					<version>1.70</version>
-					<type>jar</type>
-				</dependency>
-				<dependency>
-					<groupId>org.lz4</groupId>
-					<artifactId>lz4-java</artifactId>
-					<version>1.4.1</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
@@ -263,13 +155,13 @@
 				</dependency>
 				<dependency>
 					<groupId>org.tmatesoft.svnkit</groupId>
-					<artifactId>svnkit-javahl16</artifactId>
+					<artifactId>svnkit</artifactId>
 					<version>1.10.11</version>
 					<type>jar</type>
 				</dependency>
 				<dependency>
 					<groupId>org.tmatesoft.svnkit</groupId>
-					<artifactId>svnkit</artifactId>
+					<artifactId>svnkit-javahl16</artifactId>
 					<version>1.10.11</version>
 					<type>jar</type>
 				</dependency>
