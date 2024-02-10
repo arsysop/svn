@@ -20,7 +20,7 @@
 #     ArSysOp - initial API and implementation 
 -->
 <site>
-   <feature id="ru.arsysop.svn.connectors.feature">
+   <feature id="ru.arsysop.svn.connectors.svnkit1_10.feature">
       <category name="ru.arsysop.svn.connectors.category"/>
    </feature>
    <bundle id="antlr.antlr"/>
