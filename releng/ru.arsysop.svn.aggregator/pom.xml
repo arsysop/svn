@@ -35,10 +35,10 @@
 		<module>../ru.arsysop.svn.repository</module>
 		<module>../ru.arsysop.svn.target</module>
 
-		<module>../../bundles/ru.arsysop.svn.connector</module>
-		<module>../../features/ru.arsysop.svn.connectors.feature</module>
+		<module>../../bundles/ru.arsysop.svn.connector.svnkit1_10</module>
+		<module>../../features/ru.arsysop.svn.connectors.svnkit1_10.feature</module>
 		<module>../../features/ru.arsysop.svn.license.feature</module>
-		<module>../../tests/ru.arsysop.svn.connector.tests</module>
+		<module>../../tests/ru.arsysop.svn.connector.svnkit1_10.tests</module>
 	</modules>
 
 </project>
