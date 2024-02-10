@@ -47,7 +47,7 @@ public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 	}
 
 	public String getId() {
-		return "org.eclipse.team.svn.connector.svnkit18"; //$NON-NLS-1$
+		return "org.eclipse.team.svn.connector.svnkit1_10"; //$NON-NLS-1$
 	}
 
 	public String getClientVersion() {
@@ -62,7 +62,7 @@ public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 	}
 
 	public String getCompatibilityVersion() {
-		return "4.0.0.I20160427-1700"; //$NON-NLS-1$
+		return "5.0.0"; //$NON-NLS-1$
 	}
 
 	public int getSupportedFeatures() {
@@ -73,7 +73,7 @@ public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 	}
 
 	public int getSVNAPIVersion() {
-		return APICompatibility.SVNAPI_1_8_x;
+		return APICompatibility.SVNAPI_1_10_x;
 	}
 
 	@Override

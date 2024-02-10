@@ -22,6 +22,8 @@
 package ru.arsysop.svn.connector.internal.svnkit1_10;
 
 import java.io.OutputStream;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -53,50 +55,73 @@ import org.eclipse.team.svn.core.connector.SVNProperty;
 import org.eclipse.team.svn.core.connector.SVNRevision;
 import org.eclipse.team.svn.core.connector.SVNRevisionRange;
 import org.eclipse.team.svn.core.connector.configuration.ISVNConfigurationEventHandler;
+import org.tmatesoft.svn.core.internal.wc.SVNFileUtil;
+import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
 //TODO
 final class SvnKit1_10Connector implements ISVNConnector {
 
+	private final CallWatch watch = new CallWatch();
+	private final SVNClientImpl client;
+//FIXME: AF: not sure why do we need this
+	private final List<ISVNConfigurationEventHandler> handlers = new ArrayList<>();
+
+	public SvnKit1_10Connector() {
+		SVNFileUtil.setSleepForTimestamp(false);// not time to relax
+		client = SVNClientImpl.newInstance();
+		//FIXME: AF: not yet
+//		client.notification2(new ClientNotifyCallbackAdapter(watch.notifications));
+	}
+
 	@Override
 	public void addCallListener(ISVNCallListener listener) {
-		//TODO
+		watch.addListener(listener);
 	}
 
 	@Override
 	public void removeCallListener(ISVNCallListener listener) {
-		//TODO
+		watch.removeListener(listener);
 	}
 
 	@Override
 	public String getConfigDirectory() throws SVNConnectorException {
-		//TODO
-		return null;
+		return watch.query(ISVNCallListener.GET_CONFIG_DIRECTORY, //
+				Collections.emptyMap(), //
+				p -> client.getConfigDirectory());
 	}
 
 	@Override
-	public void setConfigDirectory(String configDir) throws SVNConnectorException {
-		//TODO
+	public void setConfigDirectory(String directory) throws SVNConnectorException {
+		watch.command(ISVNCallListener.SET_CONFIG_DIRECTORY, //
+				Map.of("configDir", directory), // //$NON-NLS-1$
+				p -> client.setConfigDirectory(directory));
 	}
 
 	@Override
-	public void setConfigurationEventHandler(ISVNConfigurationEventHandler configHandler) throws SVNConnectorException {
-		//TODO
+	public void setConfigurationEventHandler(ISVNConfigurationEventHandler handler) throws SVNConnectorException {
+		handlers.clear();
+		watch.commandSafe(ISVNCallListener.SET_CONFIGURATION_EVENT_HANDLER, //
+				Map.of("configHandler", handler), //$NON-NLS-1$
+				p -> handlers.add(handler));
 	}
 
 	@Override
 	public ISVNConfigurationEventHandler getConfigurationEventHandler() throws SVNConnectorException {
-		//TODO
-		return null;
+		return watch.querySafe(ISVNCallListener.GET_CONFIGURATION_EVENT_HANDLER, //
+				Collections.emptyMap(),
+				p -> handlers.stream().findAny().orElse(null));
 	}
 
 	@Override
 	public void setUsername(String username) {
-		//TODO
+		Map<String, Object> parameters = Map.of("username", username); //$NON-NLS-1$
+		watch.commandSafe(ISVNCallListener.SET_USERNAME, parameters, p -> client.username(username));
 	}
 
 	@Override
 	public void setPassword(String password) {
-		//TODO
+		Map<String, Object> parameters = Map.of("password", password); //$NON-NLS-1$
+		watch.commandSafe(ISVNCallListener.SET_PASSWORD, parameters, p -> client.username(password));
 	}
 
 	@Override
@@ -462,7 +487,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void dispose() {
-		//TODO
+		client.dispose();
 	}
 
 }
