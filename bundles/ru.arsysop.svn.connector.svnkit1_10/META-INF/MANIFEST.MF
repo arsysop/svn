@@ -5,7 +5,7 @@ Bundle-SymbolicName: ru.arsysop.svn.connector.svnkit1_10;singleton:=true
 Bundle-Version: 0.1.0.qualifier
 Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
-Bundle-RequiredExecutionEnvironment: JavaSE-17
+Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: org.apache.subversion.javahl;version="1.10.11",
  org.apache.subversion.javahl.callback;version="1.10.11",
  org.apache.subversion.javahl.types;version="1.10.11",
