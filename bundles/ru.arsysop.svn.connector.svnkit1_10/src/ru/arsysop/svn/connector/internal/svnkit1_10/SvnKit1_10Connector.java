@@ -58,6 +58,8 @@ import org.eclipse.team.svn.core.connector.configuration.ISVNConfigurationEventH
 import org.tmatesoft.svn.core.internal.wc.SVNFileUtil;
 import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
+import ru.arsysop.svn.connector.internal.adapt.ClientNotifyCallbackAdapter;
+
 //TODO
 final class SvnKit1_10Connector implements ISVNConnector {
 
@@ -68,9 +70,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	public SvnKit1_10Connector() {
 		SVNFileUtil.setSleepForTimestamp(false);// not time to relax
+		//FIXME: AF: check if we can remove "trilead" from target
+		System.setProperty("svnkit.ssh.client", "apache"); //$NON-NLS-1$ //$NON-NLS-2$
 		client = SVNClientImpl.newInstance();
-		//FIXME: AF: not yet
-//		client.notification2(new ClientNotifyCallbackAdapter(watch.notifications));
+		client.notification2(new ClientNotifyCallbackAdapter(watch.notifications));
 	}
 
 	@Override
@@ -127,32 +130,38 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void setPrompt(ISVNCredentialsPrompt prompt) {
 		//TODO
+		System.out.println("SvnKit1_10Connector.setPrompt()");
 	}
 
 	@Override
 	public ISVNCredentialsPrompt getPrompt() {
+		System.out.println("SvnKit1_10Connector.getPrompt()");
 		//TODO
 		return null;
 	}
 
 	@Override
 	public void setNotificationCallback(ISVNNotificationCallback notify) {
+		System.out.println("SvnKit1_10Connector.setNotificationCallback()");
 		//TODO
 	}
 
 	@Override
 	public ISVNNotificationCallback getNotificationCallback() {
+		System.out.println("SvnKit1_10Connector.getNotificationCallback()");
 		//TODO
 		return null;
 	}
 
 	@Override
 	public void setConflictResolver(ISVNConflictResolutionCallback listener) {
+		System.out.println("SvnKit1_10Connector.setConflictResolver()");
 		//TODO
 	}
 
 	@Override
 	public ISVNConflictResolutionCallback getConflictResolver() {
+		System.out.println("SvnKit1_10Connector.getConflictResolver()");
 		//TODO
 		return null;
 	}
@@ -160,6 +169,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public long checkout(SVNEntryRevisionReference fromReference, String destPath, SVNDepth depth, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.checkout()");
 		//TODO
 		return -1;
 	}
@@ -167,17 +177,20 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void lock(String[] path, String comment, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.lock()");
 		//TODO
 	}
 
 	@Override
 	public void unlock(String[] path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.unlock()");
 		//TODO
 	}
 
 	@Override
 	public void add(String path, SVNDepth depth, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.add()");
 		//TODO
 	}
 
@@ -185,12 +198,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void commit(String[] path, String message, String[] changeLists, SVNDepth depth, long options, Map revProps,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.commit()");
 		//TODO
 	}
 
 	@Override
 	public long[] update(String[] path, SVNRevision revision, SVNDepth depth, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.update()");
 		//TODO
 		return null;
 	}
@@ -198,6 +213,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public long switchTo(String path, SVNEntryRevisionReference toReference, SVNDepth depth, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.switchTo()");
 		//TODO
 		return 0;
 	}
@@ -205,35 +221,41 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void revert(String[] paths, SVNDepth depth, String[] changeLists, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.revert()");
 		//TODO
 	}
 
 	@Override
 	public void status(String path, SVNDepth depth, long options, String[] changeLists,
 			ISVNEntryStatusCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.status()");
 		//TODO
 	}
 
 	@Override
 	public void relocate(String from, String to, String path, SVNDepth depth, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.relocate()");
 		//TODO
 	}
 
 	@Override
 	public void cleanup(String path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.cleanup()");
 		//TODO
 	}
 
 	@Override
 	public void mergeTwo(SVNEntryRevisionReference reference1, SVNEntryRevisionReference reference2, String localPath,
 			SVNDepth depth, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.mergeTwo()");
 		//TODO
 	}
 
 	@Override
 	public void merge(SVNEntryReference reference, SVNRevisionRange[] revisions, String localPath, SVNDepth depth,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.merge()");
 		//TODO
 	}
 
@@ -241,12 +263,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void mergeReintegrate(SVNEntryReference reference, String localPath, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.mergeReintegrate()");
 		//TODO
 	}
 
 	@Override
 	public SVNMergeInfo getMergeInfo(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.getMergeInfo()");
 		//TODO
 		return null;
 	}
@@ -255,12 +279,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void listMergeInfoLog(LogKind logKind, SVNEntryReference reference, SVNEntryReference mergeSourceReference,
 			SVNRevisionRange mergeSourceRange, String[] revProps, SVNDepth depth, long options, ISVNLogEntryCallback cb,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.listMergeInfoLog()");
 		//TODO
 	}
 
 	@Override
 	public String[] suggestMergeSources(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.suggestMergeSources()");
 		//TODO
 		return null;
 	}
@@ -268,24 +294,28 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void resolve(String path, Choice conflictResult, SVNDepth depth, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.resolve()");
 		//TODO
 	}
 
 	@Override
 	public void addToChangeList(String[] paths, String targetChangeList, SVNDepth depth, String[] filterByChangeLists,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.addToChangeList()");
 		//TODO
 	}
 
 	@Override
 	public void removeFromChangeLists(String[] paths, SVNDepth depth, String[] changeLists, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.removeFromChangeLists()");
 		//TODO
 	}
 
 	@Override
 	public void dumpChangeLists(String[] changeLists, String rootPath, SVNDepth depth, ISVNChangeListCallback cb,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.dumpChangeLists()");
 		//TODO
 	}
 
@@ -293,12 +323,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void importTo(String path, String url, String message, SVNDepth depth, long options, Map revProps,
 			ISVNImportFilterCallback filter, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.importTo()");
 		//TODO
 	}
 
 	@Override
 	public long exportTo(SVNEntryRevisionReference fromReference, String destPath, String nativeEOL, SVNDepth depth,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.exportTo()");
 		//TODO
 		return 0;
 	}
@@ -307,6 +339,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diffTwo(SVNEntryRevisionReference refPrev, SVNEntryRevisionReference refNext, String relativeToDir,
 			String fileName, SVNDepth depth, long options, String[] changeLists, long outputOptions,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.diffTwo()");
 		//TODO
 	}
 
@@ -314,6 +347,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diff(SVNEntryReference reference, SVNRevisionRange range, String relativeToDir, String fileName,
 			SVNDepth depth, long options, String[] changeLists, long outputOptions, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.diff()");
 		//TODO
 	}
 
@@ -321,6 +355,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diffTwo(SVNEntryRevisionReference refPrev, SVNEntryRevisionReference refNext, String relativeToDir,
 			OutputStream stream, SVNDepth depth, long options, String[] changeLists, long outputOptions,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.diffTwo()");
 		//TODO
 	}
 
@@ -328,6 +363,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diff(SVNEntryReference reference, SVNRevisionRange range, String relativeToDir, OutputStream stream,
 			SVNDepth depth, long options, String[] changeLists, long outputOptions, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.diff()");
 		//TODO
 	}
 
@@ -335,24 +371,28 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diffStatusTwo(SVNEntryRevisionReference refPrev, SVNEntryRevisionReference refNext, SVNDepth depth,
 			long options, String[] changeLists, ISVNDiffStatusCallback cb, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.diffStatusTwo()");
 		//TODO
 	}
 
 	@Override
 	public void diffStatus(SVNEntryReference reference, SVNRevisionRange range, SVNDepth depth, long options,
 			String[] changeLists, ISVNDiffStatusCallback cb, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.diffStatus()");
 		//TODO
 	}
 
 	@Override
 	public void getInfo(SVNEntryRevisionReference reference, SVNDepth depth, long options, String[] changeLists,
 			ISVNEntryInfoCallback cb, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.getInfo()");
 		//TODO
 	}
 
 	@Override
 	public SVNProperty[] streamFileContent(SVNEntryRevisionReference reference, long options, OutputStream stream,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.streamFileContent()");
 		//TODO
 		return null;
 	}
@@ -361,12 +401,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void mkdir(String[] path, String message, long options, Map revProps, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.mkdir()");
 		//TODO
 	}
 
 	@Override
 	public void moveLocal(String[] srcPaths, String dstPath, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.moveLocal()");
 		//TODO
 	}
 
@@ -374,6 +416,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void moveRemote(String[] srcPaths, String dstPath, String message, long options, Map revProps,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.moveRemote()");
 		//TODO
 	}
 
@@ -381,6 +424,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void copyLocal(SVNEntryRevisionReference[] srcPaths, String destPath, long options,
 			Map<String, List<SVNExternalReference>> externalsToPin, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.copyLocal()");
 		//TODO
 	}
 
@@ -389,11 +433,13 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void copyRemote(SVNEntryRevisionReference[] srcPaths, String destPath, String message, long options,
 			Map revProps, Map<String, List<SVNExternalReference>> externalsToPin, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.copyRemote()");
 		//TODO
 	}
 
 	@Override
 	public void removeLocal(String[] path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.removeLocal()");
 		//TODO
 	}
 
@@ -401,6 +447,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void removeRemote(String[] path, String message, long options, Map revProps, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.removeRemote()");
 		//TODO
 	}
 
@@ -408,24 +455,28 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void listHistoryLog(SVNEntryReference reference, SVNRevisionRange[] revisionRanges, String[] revProps,
 			long limit, long options, ISVNLogEntryCallback cb, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.listHistoryLog()");
 		//TODO
 	}
 
 	@Override
 	public void annotate(SVNEntryReference reference, SVNRevisionRange revisionRange, long options, long diffOptions,
 			ISVNAnnotationCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.annotate()");
 		//TODO
 	}
 
 	@Override
 	public void listEntries(SVNEntryRevisionReference reference, SVNDepth depth, int direntFields, long options,
 			ISVNEntryCallback cb, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.listEntries()");
 		//TODO
 	}
 
 	@Override
 	public void listProperties(SVNEntryRevisionReference reference, SVNDepth depth, String[] changeLists, long options,
 			ISVNPropertyCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.listProperties()");
 		//TODO
 	}
 
@@ -433,6 +484,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public SVNProperty getProperty(SVNEntryRevisionReference reference, String name, String[] changeLists,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		//TODO
+		System.out.println("SvnKit1_10Connector.getProperty()");
 		return null;
 	}
 
@@ -440,18 +492,21 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void setPropertyLocal(String[] path, SVNProperty property, SVNDepth depth, long options,
 			String[] changeLists, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		//TODO
+		System.out.println("SvnKit1_10Connector.setPropertyLocal()");
 	}
 
 	@SuppressWarnings("rawtypes")
 	@Override
 	public void setPropertyRemote(SVNEntryReference reference, SVNProperty property, String message, long options,
 			Map revProps, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.setPropertyRemote()");
 		//TODO
 	}
 
 	@Override
 	public SVNProperty[] listRevisionProperties(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.listRevisionProperties()");
 		//TODO
 		return null;
 	}
@@ -459,6 +514,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public SVNProperty getRevisionProperty(SVNEntryReference reference, String name, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.getRevisionProperty()");
 		//TODO
 		return null;
 	}
@@ -466,22 +522,26 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void setRevisionProperty(SVNEntryReference reference, SVNProperty property, String originalValue,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.setRevisionProperty()");
 		//TODO
 	}
 
 	@Override
 	public void upgrade(String path, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.upgrade()");
 		//TODO
 	}
 
 	@Override
 	public void patch(String patchPath, String targetPath, int stripCount, long options, ISVNPatchCallback callback,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.patch()");
 		//TODO
 	}
 
 	@Override
 	public void vacuum(String path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
+		System.out.println("SvnKit1_10Connector.vacuum()");
 		//TODO
 	}
 
