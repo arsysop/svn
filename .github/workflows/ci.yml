@@ -25,15 +25,19 @@ on:
   push:
     branches:
       - master
+    tags:
+      - "**"      
   pull_request:
 
 jobs:
   build:
 
     runs-on: ubuntu-latest
+    name: Build Repository and Product    
 
     steps:
-    - uses: actions/checkout@v3
+    - name: Checkout
+      uses: actions/checkout@v3
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -43,7 +47,7 @@ jobs:
       uses: stCarolas/setup-maven@v4.5
       with:
         maven-version: 3.9.4  
-    - name: Setup Maven
+    - name: Echo Maven
       run: echo "MAVEN_OPTS='-Xmx2048m'" > ~/.mavenrc
     - name: Cache maven repo
       uses: actions/cache@v2
@@ -62,4 +66,58 @@ jobs:
           ${{ runner.os }}-
     - name: Build with Maven
       run: mvn clean verify --no-transfer-progress -U 
+    - name: Archive repository
+      if: ${{ github.event_name == 'push' }}
+      run: |
+        tar -C ./releng/ru.arsysop.svn.repository/target -czvf repository.tar.gz repository
+    - name: Preserve p2
+      if: ${{ github.event_name == 'push' }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: p2
+        path: ./repository.tar.gz      
    
+  deploy:
+
+    name: Deploy p2 Repository
+    needs: build
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'push' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Download p2
+        uses: actions/download-artifact@v2
+        with:
+          name: p2
+
+      - name: Prepare metadata
+        run: |
+          mkdir ./composite
+          tar -xzf ./repository.tar.gz -C ./composite
+          cp ./releng/ru.arsysop.svn.releng/compositeArtifacts.xml ./composite
+          cp ./releng/ru.arsysop.svn.releng/compositeContent.xml ./composite
+      - name: Detect build type
+        id: get-destination-dir
+        env:
+          RELEASE_BUILD: ${{ startsWith(github.ref, 'refs/tags/v') }}
+        run: |
+          if ${RELEASE_BUILD} == true; then
+            echo "::set-output name=destination_dir::release"
+          else
+            echo "::set-output name=destination_dir::integration"
+          fi
+      - name: Deploy to Github Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./composite
+          destination_dir: ${{ steps.get-destination-dir.outputs.destination_dir }}
+          keep_files: true
+
+      - name: Delete p2
+        uses: geekyeggo/delete-artifact@v1
+        with:
+          name: p2
+          
