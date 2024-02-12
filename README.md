@@ -1,2 +1,0 @@
-# svn
-SVN integration facilities
