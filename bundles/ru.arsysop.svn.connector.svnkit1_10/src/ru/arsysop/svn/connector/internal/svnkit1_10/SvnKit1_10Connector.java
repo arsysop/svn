@@ -65,6 +65,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	private final CallWatch watch = new CallWatch();
 	private final SVNClientImpl client;
+	private final List<ISVNCredentialsPrompt> prompts = new ArrayList<>();
 //FIXME: AF: not sure why do we need this
 	private final List<ISVNConfigurationEventHandler> handlers = new ArrayList<>();
 
@@ -111,8 +112,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public ISVNConfigurationEventHandler getConfigurationEventHandler() throws SVNConnectorException {
 		return watch.querySafe(ISVNCallListener.GET_CONFIGURATION_EVENT_HANDLER, //
-				Collections.emptyMap(),
-				p -> handlers.stream().findAny().orElse(null));
+				Collections.emptyMap(), p -> handlers.stream().findAny().orElse(null));
 	}
 
 	@Override
@@ -129,15 +129,19 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void setPrompt(ISVNCredentialsPrompt prompt) {
-		//TODO
-		System.out.println("SvnKit1_10Connector.setPrompt()");
+		Map<String, Object> parameters = Map.of("prompt", prompt); //$NON-NLS-1$
+		prompts.clear();
+		prompts.add(prompt);
+		watch.commandSafe(ISVNCallListener.SET_PROMPT, parameters,
+				p -> client.setPrompt(new CredentialsCallback(prompt)));
 	}
 
 	@Override
 	public ISVNCredentialsPrompt getPrompt() {
-		System.out.println("SvnKit1_10Connector.getPrompt()");
-		//TODO
-		return null;
+		//FIXME: AF: check if we need this method at all
+		return watch.querySafe(ISVNCallListener.GET_PROMPT, //
+				Collections.emptyMap(), //
+				p -> prompts.stream().findAny().orElse(null));
 	}
 
 	@Override
