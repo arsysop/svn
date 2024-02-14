@@ -31,7 +31,7 @@ import org.tmatesoft.svn.util.Version;
 public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 
 	public ISVNConnector createConnector() {
-		return new SvnKit1_10Connector();
+		return new SvnKit1_10Connector(getName());
 	}
 
 	public ISVNManager createManager() {
