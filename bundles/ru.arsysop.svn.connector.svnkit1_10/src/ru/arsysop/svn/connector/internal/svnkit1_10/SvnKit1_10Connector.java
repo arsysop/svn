@@ -24,9 +24,13 @@ package ru.arsysop.svn.connector.internal.svnkit1_10;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
+import org.apache.subversion.javahl.ClientException;
 import org.eclipse.team.svn.core.connector.ISVNAnnotationCallback;
 import org.eclipse.team.svn.core.connector.ISVNCallListener;
 import org.eclipse.team.svn.core.connector.ISVNChangeListCallback;
@@ -46,6 +50,7 @@ import org.eclipse.team.svn.core.connector.ISVNPropertyCallback;
 import org.eclipse.team.svn.core.connector.SVNConflictResolution.Choice;
 import org.eclipse.team.svn.core.connector.SVNConnectorException;
 import org.eclipse.team.svn.core.connector.SVNDepth;
+import org.eclipse.team.svn.core.connector.SVNEntry;
 import org.eclipse.team.svn.core.connector.SVNEntryReference;
 import org.eclipse.team.svn.core.connector.SVNEntryRevisionReference;
 import org.eclipse.team.svn.core.connector.SVNExternalReference;
@@ -59,20 +64,23 @@ import org.tmatesoft.svn.core.internal.wc.SVNFileUtil;
 import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
 import ru.arsysop.svn.connector.internal.adapt.ClientNotifyCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.LockAdapter;
+import ru.arsysop.svn.connector.internal.adapt.NodeKindAdapter;
 
 //TODO
 final class SvnKit1_10Connector implements ISVNConnector {
 
-	private final CallWatch watch = new CallWatch();
+	private final CallWatch watch;
 	private final SVNClientImpl client;
 	private final List<ISVNCredentialsPrompt> prompts = new ArrayList<>();
 //FIXME: AF: not sure why do we need this
 	private final List<ISVNConfigurationEventHandler> handlers = new ArrayList<>();
 
-	public SvnKit1_10Connector() {
+	public SvnKit1_10Connector(String name) {
 		SVNFileUtil.setSleepForTimestamp(false);// not time to relax
 		//FIXME: AF: check if we can remove "trilead" from target
 		System.setProperty("svnkit.ssh.client", "apache"); //$NON-NLS-1$ //$NON-NLS-2$
+		watch = new CallWatch(name);
 		client = SVNClientImpl.newInstance();
 		client.notification2(new ClientNotifyCallbackAdapter(watch.notifications));
 	}
@@ -89,14 +97,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public String getConfigDirectory() throws SVNConnectorException {
-		return watch.query(ISVNCallListener.GET_CONFIG_DIRECTORY, //
+		return watch.queryFast(ISVNCallListener.GET_CONFIG_DIRECTORY, //
 				Collections.emptyMap(), //
 				p -> client.getConfigDirectory());
 	}
 
 	@Override
 	public void setConfigDirectory(String directory) throws SVNConnectorException {
-		watch.command(ISVNCallListener.SET_CONFIG_DIRECTORY, //
+		watch.commandFast(ISVNCallListener.SET_CONFIG_DIRECTORY, //
 				Map.of("configDir", directory), // //$NON-NLS-1$
 				p -> client.setConfigDirectory(directory));
 	}
@@ -471,10 +479,49 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	}
 
 	@Override
-	public void listEntries(SVNEntryRevisionReference reference, SVNDepth depth, int direntFields, long options,
+	public void listEntries(SVNEntryRevisionReference reference, SVNDepth depth, int fields, long options,
 			ISVNEntryCallback cb, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.listEntries()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("direntFields", Integer.valueOf(fields)); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("cb", cb); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.operation(ISVNCallListener.LIST, parameters, new ProgressCallback(monitor, client::cancelOperation),
+				p -> listEntries(reference, depth, fields, options, cb));
+	}
+
+	private void listEntries(SVNEntryRevisionReference reference, SVNDepth depth, int fields, long options,
+			ISVNEntryCallback cb) throws ClientException {
+		client.list(//
+				reference.path, //
+				new RevisionJavahlSubversive(reference.revision).adapt(), //
+				new RevisionJavahlSubversive(reference.pegRevision).adapt(), //
+				new DepthJavahlSubversive(depth).adapt(), //
+				fields, //
+				(options & Options.FETCH_LOCKS) != 0, //
+				new org.apache.subversion.javahl.callback.ListCallback() {
+
+					public void doEntry(org.apache.subversion.javahl.types.DirEntry entry,
+							org.apache.subversion.javahl.types.Lock lock) {
+						String path = entry.getPath();
+						if (path == null || path.length() == 0
+								|| entry.getNodeKind() != org.apache.subversion.javahl.types.NodeKind.file) {
+							return;
+						}
+						cb.next(new SVNEntry(path, //
+								entry.getLastChangedRevisionNumber(), //
+								Optional.ofNullable(entry.getLastChanged()).map(Date::getTime).orElse(0L), //
+								entry.getLastAuthor(), //
+								entry.getHasProps(), //
+								new NodeKindAdapter(entry.getNodeKind()).adapt(), //
+								entry.getSize(), //
+								new LockAdapter(lock).adapt()));
+					}
+
+				}
+				);
 	}
 
 	@Override
@@ -552,6 +599,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void dispose() {
 		client.dispose();
+		watch.dispose();
 	}
 
 }

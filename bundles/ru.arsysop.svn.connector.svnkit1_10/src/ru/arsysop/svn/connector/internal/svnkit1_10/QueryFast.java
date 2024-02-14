@@ -19,29 +19,15 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.svnkit1_10;
 
 import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
 
-abstract class SvnTypeMap<S, T> implements SvnTypeAdapter<S, T> {
+import org.apache.subversion.javahl.ClientException;
 
-	private final S source;
-	private final Map<S, T> map;
+@FunctionalInterface
+public interface QueryFast<V> {
 
-	protected SvnTypeMap(S source) {
-		this.source = Objects.requireNonNull(source);
-		map = fill();
-	}
-
-	protected abstract Map<S, T> fill();
-
-	@Override
-	public final T adapt() {
-		return Optional.ofNullable(map.get(source)).orElseGet(this::defaults);
-	}
-
-	abstract T defaults();
+	V query(Map<String, Object> parameters) throws ClientException;
 
 }
