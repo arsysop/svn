@@ -21,25 +21,26 @@
 
 package ru.arsysop.svn.connector.internal.adapt.svjhl;
 
-import org.apache.subversion.javahl.callback.InfoCallback;
-import org.eclipse.team.svn.core.connector.ISVNEntryInfoCallback;
+import java.util.Map;
+
+import org.apache.subversion.javahl.callback.ProplistCallback;
+import org.eclipse.team.svn.core.connector.ISVNPropertyCallback;
 
 import ru.arsysop.svn.connector.internal.adapt.SvnTypeConstructor;
-import ru.arsysop.svn.connector.internal.adapt.jhlsv.InfoNullableAdapter;
 
-public final class InfoCallbackAdapter extends SvnTypeConstructor<ISVNEntryInfoCallback, InfoCallback> {
+public final class PropertyCallbackAdapter extends SvnTypeConstructor<ISVNPropertyCallback, ProplistCallback> {
 
-	public InfoCallbackAdapter(ISVNEntryInfoCallback source) {
+	public PropertyCallbackAdapter(ISVNPropertyCallback source) {
 		super(source);
 	}
 
 	@Override
-	public InfoCallback adapt() {
-		return new org.apache.subversion.javahl.callback.InfoCallback() {
+	public ProplistCallback adapt() {
+		return new ProplistCallback() {
 
-			public void singleInfo(org.apache.subversion.javahl.types.Info info) {
-				//FIXME: AF: should we filter out null value?
-				source.next(new InfoNullableAdapter(info).adapt());
+			@Override
+			public void singlePath(String path, Map<String, byte[]> properties) {
+				source.next(new PropertyCallbackPair(path, properties).get(), new ISVNPropertyCallback.Pair[0]);
 			}
 
 		};
