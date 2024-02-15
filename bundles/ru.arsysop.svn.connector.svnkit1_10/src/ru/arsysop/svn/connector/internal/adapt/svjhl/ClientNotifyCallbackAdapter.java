@@ -19,29 +19,26 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.svjhl;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import org.eclipse.team.svn.core.connector.ISVNNotificationCallback;
 
-public abstract class SvnTypeMap<S, T> implements SvnTypeAdapter<S, T> {
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.ClientNotifyInformationAdapter;
 
-	private final S source;
-	private final Map<S, T> map;
+public final class ClientNotifyCallbackAdapter implements org.apache.subversion.javahl.callback.ClientNotifyCallback {
 
-	protected SvnTypeMap(S source) {
-		this.source = Objects.requireNonNull(source);
-		map = fill();
+	private final ISVNNotificationCallback callback;
+
+	public ClientNotifyCallbackAdapter(ISVNNotificationCallback notify) {
+		callback = notify;
 	}
 
-	protected abstract Map<S, T> fill();
+	public ISVNNotificationCallback callback() {
+		return callback;
+	}
 
 	@Override
-	public final T adapt() {
-		return Optional.ofNullable(map.get(source)).orElseGet(this::defaults);
+	public void onNotify(org.apache.subversion.javahl.ClientNotifyInformation info) {
+		callback.notify(new ClientNotifyInformationAdapter(info).adapt());
 	}
-
-	protected abstract T defaults();
-
 }

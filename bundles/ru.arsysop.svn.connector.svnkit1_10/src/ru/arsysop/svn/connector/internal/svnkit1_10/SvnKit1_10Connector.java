@@ -23,6 +23,7 @@ package ru.arsysop.svn.connector.internal.svnkit1_10;
 
 import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -63,9 +64,11 @@ import org.eclipse.team.svn.core.connector.configuration.ISVNConfigurationEventH
 import org.tmatesoft.svn.core.internal.wc.SVNFileUtil;
 import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
-import ru.arsysop.svn.connector.internal.adapt.ClientNotifyCallbackAdapter;
-import ru.arsysop.svn.connector.internal.adapt.LockAdapter;
-import ru.arsysop.svn.connector.internal.adapt.NodeKindAdapter;
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.ClientNotifyCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.InfoCallbackAdapter;
 
 //TODO
 final class SvnKit1_10Connector implements ISVNConnector {
@@ -397,8 +400,21 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void getInfo(SVNEntryRevisionReference reference, SVNDepth depth, long options, String[] changeLists,
 			ISVNEntryInfoCallback cb, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.getInfo()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("cb", cb); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.operation(ISVNCallListener.GET_INFO, parameters, callback(monitor),
+				p -> client.info2(//
+						reference.path, //
+						new RevisionJavahlSubversive(reference.revision).adapt(), //
+						new RevisionJavahlSubversive(reference.pegRevision).adapt(), //
+						new DepthAdapter(depth).adapt(), //
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //FIXME: AF: investigate if we can provide empty list here
+						new InfoCallbackAdapter(cb).adapt()));
 	}
 
 	@Override
@@ -488,7 +504,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
 		parameters.put("cb", cb); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.LIST, parameters, new ProgressCallback(monitor, client::cancelOperation),
+		watch.operation(ISVNCallListener.LIST, parameters, callback(monitor),
 				p -> listEntries(reference, depth, fields, options, cb));
 	}
 
@@ -498,7 +514,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 				reference.path, //
 				new RevisionJavahlSubversive(reference.revision).adapt(), //
 				new RevisionJavahlSubversive(reference.pegRevision).adapt(), //
-				new DepthJavahlSubversive(depth).adapt(), //
+				new DepthAdapter(depth).adapt(), //
 				fields, //
 				(options & Options.FETCH_LOCKS) != 0, //
 				new org.apache.subversion.javahl.callback.ListCallback() {
@@ -517,7 +533,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 								entry.getHasProps(), //
 								new NodeKindAdapter(entry.getNodeKind()).adapt(), //
 								entry.getSize(), //
-								new LockAdapter(lock).adapt()));
+								new LockNullableAdapter(lock).adapt()));
 					}
 
 				}
@@ -594,6 +610,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void vacuum(String path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		System.out.println("SvnKit1_10Connector.vacuum()");
 		//TODO
+	}
+
+	private ProgressCallback callback(ISVNProgressMonitor monitor) {
+		return new ProgressCallback(monitor, client::cancelOperation);
 	}
 
 	@Override

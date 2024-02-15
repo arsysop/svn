@@ -19,7 +19,7 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +27,8 @@ import java.util.Map;
 import org.apache.subversion.javahl.ClientNotifyInformation.Action;
 import org.eclipse.team.svn.core.connector.SVNNotification;
 import org.eclipse.team.svn.core.connector.SVNNotification.PerformedAction;
+
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeMap;
 
 final class ClientNotifyInformationActionAdapter extends SvnTypeMap<Action, PerformedAction> {
 
@@ -117,7 +119,7 @@ final class ClientNotifyInformationActionAdapter extends SvnTypeMap<Action, Perf
 	}
 
 	@Override
-	SVNNotification.PerformedAction defaults() {
+	protected SVNNotification.PerformedAction defaults() {
 		return SVNNotification.PerformedAction._UNKNOWN_ACTION;
 	}
 

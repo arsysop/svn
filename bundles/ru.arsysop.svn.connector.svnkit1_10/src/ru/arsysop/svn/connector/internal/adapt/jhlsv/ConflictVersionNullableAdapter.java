@@ -19,29 +19,26 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import org.apache.subversion.javahl.types.ConflictVersion;
+import org.eclipse.team.svn.core.connector.SVNConflictVersion;
 
-public abstract class SvnTypeMap<S, T> implements SvnTypeAdapter<S, T> {
+import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 
-	private final S source;
-	private final Map<S, T> map;
+public final class ConflictVersionNullableAdapter extends SvnNullableConstructor<ConflictVersion, SVNConflictVersion> {
 
-	protected SvnTypeMap(S source) {
-		this.source = Objects.requireNonNull(source);
-		map = fill();
+	public ConflictVersionNullableAdapter(ConflictVersion source) {
+		super(source);
 	}
-
-	protected abstract Map<S, T> fill();
 
 	@Override
-	public final T adapt() {
-		return Optional.ofNullable(map.get(source)).orElseGet(this::defaults);
+	protected SVNConflictVersion adapt(ConflictVersion source) {
+		return new SVNConflictVersion(//
+				source.getReposURL(), //
+				source.getPegRevision(), //
+				source.getPathInRepos(), //
+				new NodeKindAdapter(source.getNodeKind()).adapt());
 	}
-
-	protected abstract T defaults();
 
 }

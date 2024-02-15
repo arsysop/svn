@@ -19,13 +19,15 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import java.util.Date;
 import java.util.Optional;
 
 import org.apache.subversion.javahl.types.Status;
 import org.eclipse.team.svn.core.connector.SVNChangeStatus;
+
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeConstructor;
 
 public final class TypeStatusAdapter
 extends SvnTypeConstructor<org.apache.subversion.javahl.types.Status, SVNChangeStatus> {
@@ -51,8 +53,8 @@ extends SvnTypeConstructor<org.apache.subversion.javahl.types.Status, SVNChangeS
 				source.isLocked(), //
 				source.isCopied(), //
 				source.isSwitched(), //
-				new LockAdapter(source.getLocalLock()).adapt(), //
-				new LockAdapter(source.getReposLock()).adapt(), //
+				new LockNullableAdapter(source.getLocalLock()).adapt(), //
+				new LockNullableAdapter(source.getReposLock()).adapt(), //
 				source.getReposLastCmtRevisionNumber(), //
 				Optional.ofNullable(source.getReposLastCmtDate()).map(Date::getTime).orElse(0L),
 				new NodeKindAdapter(source.getReposKind()).adapt(), //

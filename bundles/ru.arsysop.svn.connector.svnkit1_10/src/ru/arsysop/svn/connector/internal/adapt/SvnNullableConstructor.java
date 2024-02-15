@@ -21,21 +21,25 @@
 
 package ru.arsysop.svn.connector.internal.adapt;
 
-import org.eclipse.team.svn.core.connector.ISVNNotificationCallback;
+import java.util.Optional;
 
-public final class ClientNotifyCallbackAdapter implements org.apache.subversion.javahl.callback.ClientNotifyCallback {
+/**
+ * 
+ * They are not kidding, and really transfer <code>null</code>> values here and there
+ */
+public abstract class SvnNullableConstructor<S, T> implements SvnNullableAdapter<S, T> {
 
-	private final ISVNNotificationCallback callback;
+	private final Optional<S> optional;
 
-	public ClientNotifyCallbackAdapter(ISVNNotificationCallback notify) {
-		callback = notify;
+	public SvnNullableConstructor(S source) {
+		optional = Optional.ofNullable(source);
 	}
 
-	public ISVNNotificationCallback callback() {
-		return callback;
+	@Override
+	public final T adapt() {
+		return optional.map(this::adapt).orElse(null);
 	}
 
-	public void onNotify(org.apache.subversion.javahl.ClientNotifyInformation info) {
-		callback.notify(new ClientNotifyInformationAdapter(info).adapt());
-	}
+	protected abstract T adapt(S source);
+
 }

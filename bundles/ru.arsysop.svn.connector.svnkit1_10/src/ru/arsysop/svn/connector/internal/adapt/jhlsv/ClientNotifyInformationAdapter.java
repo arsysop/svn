@@ -19,14 +19,16 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import org.apache.subversion.javahl.ClientNotifyInformation;
 import org.eclipse.team.svn.core.connector.SVNNotification;
 
-final class ClientNotifyInformationAdapter extends SvnTypeConstructor<ClientNotifyInformation, SVNNotification> {
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeConstructor;
 
-	ClientNotifyInformationAdapter(ClientNotifyInformation source) {
+public final class ClientNotifyInformationAdapter extends SvnTypeConstructor<ClientNotifyInformation, SVNNotification> {
+
+	public ClientNotifyInformationAdapter(ClientNotifyInformation source) {
 		super(source);
 	}
 
@@ -37,7 +39,7 @@ final class ClientNotifyInformationAdapter extends SvnTypeConstructor<ClientNoti
 				new ClientNotifyInformationActionAdapter(source.getAction()).adapt(), //
 				new NodeKindAdapter(source.getKind()).adapt(), //
 				source.getMimeType(), //
-				new LockAdapter(source.getLock()).adapt(), //
+				new LockNullableAdapter(source.getLock()).adapt(), //
 				source.getErrMsg(), //
 				new ClientNotifyInformationStatusAdapter(source.getContentState()).adapt(), //
 				new ClientNotifyInformationStatusAdapter(source.getPropState()).adapt(), //

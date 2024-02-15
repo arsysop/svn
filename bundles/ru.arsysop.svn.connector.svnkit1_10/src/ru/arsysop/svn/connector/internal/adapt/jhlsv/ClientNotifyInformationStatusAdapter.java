@@ -19,7 +19,7 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -28,6 +28,8 @@ import org.apache.subversion.javahl.ClientNotifyInformation;
 import org.apache.subversion.javahl.ClientNotifyInformation.Status;
 import org.eclipse.team.svn.core.connector.SVNNotification;
 import org.eclipse.team.svn.core.connector.SVNNotification.NodeStatus;
+
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeMap;
 
 final class ClientNotifyInformationStatusAdapter
 extends SvnTypeMap<org.apache.subversion.javahl.ClientNotifyInformation.Status, NodeStatus> {
@@ -51,7 +53,7 @@ extends SvnTypeMap<org.apache.subversion.javahl.ClientNotifyInformation.Status, 
 	}
 
 	@Override
-	NodeStatus defaults() {
+	protected NodeStatus defaults() {
 		return NodeStatus.UNKNOWN;
 	}
 

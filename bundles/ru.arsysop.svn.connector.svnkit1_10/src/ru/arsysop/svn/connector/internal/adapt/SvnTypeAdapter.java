@@ -22,7 +22,7 @@
 package ru.arsysop.svn.connector.internal.adapt;
 
 
-interface SvnTypeAdapter<S, T> {
+public interface SvnTypeAdapter<S, T> {
 
 	T adapt();
 

@@ -19,29 +19,32 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
-import java.util.Map;
-import java.util.Objects;
+import java.util.Date;
 import java.util.Optional;
 
-public abstract class SvnTypeMap<S, T> implements SvnTypeAdapter<S, T> {
+import org.apache.subversion.javahl.types.Lock;
+import org.eclipse.team.svn.core.connector.SVNLock;
 
-	private final S source;
-	private final Map<S, T> map;
+import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 
-	protected SvnTypeMap(S source) {
-		this.source = Objects.requireNonNull(source);
-		map = fill();
+public final class LockNullableAdapter extends SvnNullableConstructor<Lock, SVNLock> {
+
+	public LockNullableAdapter(Lock source) {
+		super(source);
 	}
-
-	protected abstract Map<S, T> fill();
 
 	@Override
-	public final T adapt() {
-		return Optional.ofNullable(map.get(source)).orElseGet(this::defaults);
+	protected SVNLock adapt(Lock source) {
+		return new SVNLock(
+				source.getOwner(), //
+				source.getPath(), //
+				source.getToken(), //
+				source.getComment(), //
+				Optional.ofNullable(source.getCreationDate()).map(Date::getTime).orElse(0L), //
+				Optional.ofNullable(source.getExpirationDate()).map(Date::getTime).orElse(0L)//
+				);
 	}
-
-	protected abstract T defaults();
 
 }
