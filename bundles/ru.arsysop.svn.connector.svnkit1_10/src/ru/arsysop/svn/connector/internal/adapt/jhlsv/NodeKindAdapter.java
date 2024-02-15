@@ -19,13 +19,15 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import java.util.Map;
 
 import org.apache.subversion.javahl.types.NodeKind;
 import org.eclipse.team.svn.core.connector.SVNEntry;
 import org.eclipse.team.svn.core.connector.SVNEntry.Kind;
+
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeMap;
 
 public final class NodeKindAdapter extends SvnTypeMap<NodeKind, SVNEntry.Kind> {
 
@@ -45,7 +47,7 @@ public final class NodeKindAdapter extends SvnTypeMap<NodeKind, SVNEntry.Kind> {
 	}
 
 	@Override
-	Kind defaults() {
+	protected Kind defaults() {
 		return Kind.UNKNOWN;
 	}
 

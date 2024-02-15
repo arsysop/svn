@@ -19,7 +19,7 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +27,8 @@ import java.util.Map;
 import org.apache.subversion.javahl.types.Status;
 import org.apache.subversion.javahl.types.Status.Kind;
 import org.eclipse.team.svn.core.connector.SVNEntryStatus;
+
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeMap;
 
 final class StatusKindAdapter extends SvnTypeMap<Status.Kind, SVNEntryStatus.Kind> {
 
@@ -55,7 +57,7 @@ final class StatusKindAdapter extends SvnTypeMap<Status.Kind, SVNEntryStatus.Kin
 	}
 
 	@Override
-	SVNEntryStatus.Kind defaults() {
+	protected SVNEntryStatus.Kind defaults() {
 		return SVNEntryStatus.Kind.NONE;
 	}
 

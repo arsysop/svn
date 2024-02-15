@@ -19,7 +19,7 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,6 +27,8 @@ import java.util.Map;
 import org.apache.subversion.javahl.ClientNotifyInformation.LockStatus;
 import org.eclipse.team.svn.core.connector.SVNNotification;
 import org.eclipse.team.svn.core.connector.SVNNotification.NodeLock;
+
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeMap;
 
 final class LockStatusAdapter extends SvnTypeMap<LockStatus, NodeLock> {
 
@@ -46,7 +48,7 @@ final class LockStatusAdapter extends SvnTypeMap<LockStatus, NodeLock> {
 	}
 
 	@Override
-	NodeLock defaults() {
+	protected NodeLock defaults() {
 		return NodeLock.UNKNOWN;
 	}
 

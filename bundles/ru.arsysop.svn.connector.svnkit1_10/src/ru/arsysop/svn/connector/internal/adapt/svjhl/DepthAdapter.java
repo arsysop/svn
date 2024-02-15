@@ -19,19 +19,25 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.svnkit1_10;
+package ru.arsysop.svn.connector.internal.adapt.svjhl;
 
+import java.util.Objects;
+
+import org.apache.subversion.javahl.types.Depth;
 import org.eclipse.team.svn.core.connector.SVNDepth;
 
-final class DepthJavahlSubversive {
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeAdapter;
+
+public final class DepthAdapter implements SvnTypeAdapter<SVNDepth, Depth> {
 
 	private final SVNDepth depth;
 
-	DepthJavahlSubversive(SVNDepth depth) {
-		this.depth = depth;
+	public DepthAdapter(SVNDepth depth) {
+		this.depth = Objects.requireNonNull(depth);
 	}
 
-	org.apache.subversion.javahl.types.Depth adapt() {
+	@Override
+	public org.apache.subversion.javahl.types.Depth adapt() {
 		switch (depth) {
 			case EXCLUDE:
 				return org.apache.subversion.javahl.types.Depth.exclude;

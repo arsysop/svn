@@ -21,25 +21,16 @@
 
 package ru.arsysop.svn.connector.internal.adapt;
 
-import org.apache.subversion.javahl.types.Lock;
-import org.eclipse.team.svn.core.connector.SVNLock;
+/**
+ * 
+ * Attention! It accepts <code>null</code> and may return <code>null</code>
+ */
+public interface SvnNullableAdapter<S, T> extends SvnTypeAdapter<S, T> {
 
-public final class LockAdapter extends SvnTypeConstructor<Lock, SVNLock> {
-
-	public LockAdapter(Lock source) {
-		super(source);
-	}
-
+	/**
+	 * Attention! It may return <code>null</code>
+	 */
 	@Override
-	public SVNLock adapt() {
-		return new SVNLock(
-				source.getOwner(), //
-				source.getPath(), //
-				source.getToken(), //
-				source.getComment(), //
-				source.getCreationDate() == null ? 0 : source.getCreationDate().getTime(), //
-						source.getExpirationDate() == null ? 0 : source.getExpirationDate().getTime()//
-				);
-	}
+	T adapt();
 
 }

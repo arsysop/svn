@@ -23,11 +23,11 @@ package ru.arsysop.svn.connector.internal.adapt;
 
 import java.util.Objects;
 
-abstract class SvnTypeConstructor<S, T> implements SvnTypeAdapter<S, T> {
+public abstract class SvnTypeConstructor<S, T> implements SvnTypeAdapter<S, T> {
 
 	protected final S source;
 
-	SvnTypeConstructor(S source) {
+	public SvnTypeConstructor(S source) {
 		this.source = Objects.requireNonNull(source);
 	}
 
