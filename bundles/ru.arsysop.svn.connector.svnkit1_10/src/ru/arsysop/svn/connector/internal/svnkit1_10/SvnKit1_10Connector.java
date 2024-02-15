@@ -69,6 +69,9 @@ import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.ClientNotifyCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InfoCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.InheritedCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.PropertyCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
 
 //TODO
 final class SvnKit1_10Connector implements ISVNConnector {
@@ -410,8 +413,8 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		watch.operation(ISVNCallListener.GET_INFO, parameters, callback(monitor),
 				p -> client.info2(//
 						reference.path, //
-						new RevisionJavahlSubversive(reference.revision).adapt(), //
-						new RevisionJavahlSubversive(reference.pegRevision).adapt(), //
+						new RevisionAdapter(reference.revision).adapt(), //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
 						new DepthAdapter(depth).adapt(), //
 						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //FIXME: AF: investigate if we can provide empty list here
 						new InfoCallbackAdapter(cb).adapt()));
@@ -512,8 +515,8 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			ISVNEntryCallback cb) throws ClientException {
 		client.list(//
 				reference.path, //
-				new RevisionJavahlSubversive(reference.revision).adapt(), //
-				new RevisionJavahlSubversive(reference.pegRevision).adapt(), //
+				new RevisionAdapter(reference.revision).adapt(), //
+				new RevisionAdapter(reference.pegRevision).adapt(), //
 				new DepthAdapter(depth).adapt(), //
 				fields, //
 				(options & Options.FETCH_LOCKS) != 0, //
@@ -522,8 +525,8 @@ final class SvnKit1_10Connector implements ISVNConnector {
 					public void doEntry(org.apache.subversion.javahl.types.DirEntry entry,
 							org.apache.subversion.javahl.types.Lock lock) {
 						String path = entry.getPath();
-						if (path == null || path.length() == 0
-								|| entry.getNodeKind() != org.apache.subversion.javahl.types.NodeKind.file) {
+						if ((path == null || path.length() == 0)
+								&& entry.getNodeKind() != org.apache.subversion.javahl.types.NodeKind.file) {
 							return;
 						}
 						cb.next(new SVNEntry(path, //
@@ -543,8 +546,37 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void listProperties(SVNEntryRevisionReference reference, SVNDepth depth, String[] changeLists, long options,
 			ISVNPropertyCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.listProperties()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.operation(ISVNCallListener.GET_PROPERTIES, parameters, callback(monitor),
+				p -> listProperties(reference, depth, changeLists, options, callback));
+	}
+
+	private void listProperties(SVNEntryRevisionReference reference, SVNDepth depth, String[] changeLists, long options,
+			ISVNPropertyCallback callback) throws ClientException {
+
+
+		if ((options & Options.INHERIT_PROPERTIES) != 0) {
+			final ISVNPropertyCallback callback1 = callback;
+			client.properties(reference.path, //
+					new RevisionAdapter(reference.revision).adapt(),
+					new RevisionAdapter(reference.pegRevision).adapt(), //
+					new DepthAdapter(depth).adapt(), //
+					Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //FIXME: AF: investigate if we can provide empty list here
+					new InheritedCallbackAdapter(callback1).adapt());
+		} else {
+			final ISVNPropertyCallback callback1 = callback;
+			client.properties(reference.path, //
+					new RevisionAdapter(reference.revision).adapt(),
+					new RevisionAdapter(reference.pegRevision).adapt(), //
+					new DepthAdapter(depth).adapt(), //
+					Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //FIXME: AF: investigate if we can provide empty list here
+					new PropertyCallbackAdapter(callback1).adapt());
+		}
 	}
 
 	@Override

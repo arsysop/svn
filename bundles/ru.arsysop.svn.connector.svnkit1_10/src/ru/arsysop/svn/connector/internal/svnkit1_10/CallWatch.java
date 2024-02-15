@@ -90,13 +90,13 @@ final class CallWatch {
 		}
 	}
 
-	void operation(String method, Map<String, Object> parameters, ProgressCallback wrapper, Operation operation)
+	void operation(String method, Map<String, Object> parameters, ProgressCallback progress, Operation operation)
 			throws SVNConnectorException {
 		asked(method, parameters);
 		try {
-			notifications.add(wrapper);
-			wrapper.start();
-			watchdog.add(wrapper);
+			notifications.add(progress);
+			progress.start();
+			watchdog.add(progress);
 			operation.operation(parameters);
 			succeeded(method, parameters, null);//oh, no! we need to change this interface
 		} catch (ClientException ex) {
@@ -104,9 +104,9 @@ final class CallWatch {
 			failed(method, parameters, wrap);
 			throw wrap;
 		} finally {
-			wrapper.finish();
-			watchdog.remove(wrapper);
-			notifications.remove(wrapper);
+			progress.finish();
+			watchdog.remove(progress);
+			notifications.remove(progress);
 		}
 	}
 

@@ -19,23 +19,24 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.svnkit1_10;
+package ru.arsysop.svn.connector.internal.adapt.svjhl;
 
 import java.util.Date;
-import java.util.Objects;
 
+import org.apache.subversion.javahl.types.Revision;
 import org.eclipse.team.svn.core.connector.SVNRevision;
 
-final class RevisionJavahlSubversive {
+import ru.arsysop.svn.connector.internal.adapt.SvnTypeConstructor;
 
-	private final SVNRevision revision;
+public final class RevisionAdapter extends SvnTypeConstructor<SVNRevision, Revision> {
 
-	RevisionJavahlSubversive(SVNRevision revision) {
-		this.revision = Objects.requireNonNull(revision);
+	public RevisionAdapter(SVNRevision revision) {
+		super(revision);
 	}
 
-	org.apache.subversion.javahl.types.Revision adapt() {
-		switch (revision.getKind()) {
+	@Override
+	public org.apache.subversion.javahl.types.Revision adapt() {
+		switch (source.getKind()) {
 			case BASE:
 				return org.apache.subversion.javahl.types.Revision.BASE;
 			case COMMITTED:
@@ -49,13 +50,14 @@ final class RevisionJavahlSubversive {
 			case START:
 				return org.apache.subversion.javahl.types.Revision.START;
 			case NUMBER:
-				return org.apache.subversion.javahl.types.Revision.getInstance(((SVNRevision.Number) revision).getNumber());
+				return org.apache.subversion.javahl.types.Revision
+						.getInstance(((SVNRevision.Number) source).getNumber());
 			case DATE:
 				return org.apache.subversion.javahl.types.Revision
-						.getInstance(new Date(((SVNRevision.Date) revision).getDate()));
+						.getInstance(new Date(((SVNRevision.Date) source).getDate()));
 			default:
 				return org.apache.subversion.javahl.types.Revision
-						.getInstance(new Date(((SVNRevision.Date) revision).getDate()));
+						.getInstance(new Date(((SVNRevision.Date) source).getDate()));
 		}
 
 	}
