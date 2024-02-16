@@ -31,11 +31,11 @@ import org.tmatesoft.svn.util.Version;
 public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 
 	public ISVNConnector createConnector() {
-		return new SvnKit1_10Connector(getName());
+		return new SvnKit1_10Connector(String.format("SVNKit %s Connector", Version.getShortVersionString()));
 	}
 
 	public ISVNManager createManager() {
-		return new SvnKit1_10Manager();
+		return new SvnKit1_10Manager(String.format("SVNKit %s Manager", Version.getShortVersionString()));
 	}
 
 	public String getName() {

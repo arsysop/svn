@@ -66,7 +66,7 @@ import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
-import ru.arsysop.svn.connector.internal.adapt.svjhl.ClientNotifyCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InfoCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InheritedCallbackAdapter;
@@ -82,13 +82,13 @@ final class SvnKit1_10Connector implements ISVNConnector {
 //FIXME: AF: not sure why do we need this
 	private final List<ISVNConfigurationEventHandler> handlers = new ArrayList<>();
 
-	public SvnKit1_10Connector(String name) {
+	SvnKit1_10Connector(String name) {
 		SVNFileUtil.setSleepForTimestamp(false);// not time to relax
 		//FIXME: AF: check if we can remove "trilead" from target
 		System.setProperty("svnkit.ssh.client", "apache"); //$NON-NLS-1$ //$NON-NLS-2$
 		watch = new CallWatch(name);
 		client = SVNClientImpl.newInstance();
-		client.notification2(new ClientNotifyCallbackAdapter(watch.notifications));
+		client.notification2(new AdaptClientNotifyCallback(watch.notifications));
 	}
 
 	@Override

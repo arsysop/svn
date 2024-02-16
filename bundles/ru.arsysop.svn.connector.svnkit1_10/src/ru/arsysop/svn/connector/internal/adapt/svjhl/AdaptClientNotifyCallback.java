@@ -21,16 +21,18 @@
 
 package ru.arsysop.svn.connector.internal.adapt.svjhl;
 
+import java.util.Objects;
+
 import org.eclipse.team.svn.core.connector.ISVNNotificationCallback;
 
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.ClientNotifyInformationAdapter;
 
-public final class ClientNotifyCallbackAdapter implements org.apache.subversion.javahl.callback.ClientNotifyCallback {
+public final class AdaptClientNotifyCallback implements org.apache.subversion.javahl.callback.ClientNotifyCallback {
 
 	private final ISVNNotificationCallback callback;
 
-	public ClientNotifyCallbackAdapter(ISVNNotificationCallback notify) {
-		callback = notify;
+	public AdaptClientNotifyCallback(ISVNNotificationCallback notify) {
+		callback = Objects.requireNonNull(notify);
 	}
 
 	public ISVNNotificationCallback callback() {
