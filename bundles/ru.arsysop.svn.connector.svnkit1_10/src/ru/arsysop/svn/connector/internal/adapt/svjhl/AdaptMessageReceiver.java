@@ -23,21 +23,20 @@ package ru.arsysop.svn.connector.internal.adapt.svjhl;
 
 import java.util.Objects;
 
-import org.apache.subversion.javahl.ReposNotifyInformation;
-import org.eclipse.team.svn.core.connector.ISVNRepositoryNotificationCallback;
+import org.apache.subversion.javahl.ISVNRepos.MessageReceiver;
+import org.eclipse.team.svn.core.connector.ISVNRepositoryMessageCallback;
 
-import ru.arsysop.svn.connector.internal.adapt.jhlsv.ReposNotifyInformationAdapter;
+public final class AdaptMessageReceiver implements MessageReceiver {
 
-public final class AdaptReposNotifyCallback implements org.apache.subversion.javahl.callback.ReposNotifyCallback {
+	private final ISVNRepositoryMessageCallback callback;
 
-	private final ISVNRepositoryNotificationCallback callback;
-
-	public AdaptReposNotifyCallback(ISVNRepositoryNotificationCallback notify) {
+	public AdaptMessageReceiver(ISVNRepositoryMessageCallback notify) {
 		callback = Objects.requireNonNull(notify);
 	}
 
 	@Override
-	public void onNotify(ReposNotifyInformation info) {
-		callback.notify(new ReposNotifyInformationAdapter(info).adapt());
+	public void receiveMessageLine(String message) {
+		callback.nextMessage(message);
+
 	}
 }

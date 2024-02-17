@@ -26,8 +26,8 @@ import java.util.Map;
 import org.apache.subversion.javahl.ClientException;
 
 @FunctionalInterface
-interface Operation {
+interface CommandLong {
 
-	void operation(Map<String, Object> parameters) throws ClientException;
+	void command(Map<String, Object> parameters) throws ClientException;
 
 }

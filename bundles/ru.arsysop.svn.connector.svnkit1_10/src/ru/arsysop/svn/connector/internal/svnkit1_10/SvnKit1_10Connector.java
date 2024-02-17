@@ -410,7 +410,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		parameters.put("changeLists", changeLists); //$NON-NLS-1$
 		parameters.put("cb", cb); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.GET_INFO, parameters, callback(monitor),
+		watch.commandLong(ISVNCallListener.GET_INFO, parameters, callback(monitor),
 				p -> client.info2(//
 						reference.path, //
 						new RevisionAdapter(reference.revision).adapt(), //
@@ -507,7 +507,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
 		parameters.put("cb", cb); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.LIST, parameters, callback(monitor),
+		watch.commandLong(ISVNCallListener.LIST, parameters, callback(monitor),
 				p -> listEntries(reference, depth, fields, options, cb));
 	}
 
@@ -552,7 +552,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		parameters.put("changeLists", changeLists); //$NON-NLS-1$
 		parameters.put("callback", callback); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.GET_PROPERTIES, parameters, callback(monitor),
+		watch.commandLong(ISVNCallListener.GET_PROPERTIES, parameters, callback(monitor),
 				p -> listProperties(reference, depth, changeLists, options, callback));
 	}
 
