@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import org.apache.subversion.javahl.ClientException;
 import org.apache.subversion.javahl.ISVNRepos;
 import org.apache.subversion.javahl.SVNRepos;
 import org.eclipse.team.svn.core.connector.ISVNCallListener;
@@ -44,6 +45,7 @@ import org.eclipse.team.svn.core.connector.SVNProperty;
 import org.eclipse.team.svn.core.connector.SVNRevisionRange;
 import org.eclipse.team.svn.core.utility.SVNRepositoryNotificationComposite;
 
+import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptMessageReceiver;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptReposNotifyCallback;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
 
@@ -67,13 +69,12 @@ final class SvnKit1_10Manager implements ISVNManager {
 		parameters.put("configPath", configPath); //$NON-NLS-1$
 		parameters.put("options", options); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.CREATE, parameters, callback(monitor),
-				p -> admin.create(//
-						new File(repositoryPath), //
-						(options & Options.DISABLE_FSYNC_COMMIT) != 0, //
-						(options & Options.KEEP_LOG) != 0, //
-						Optional.ofNullable(configPath).map(File::new).orElse(null),
-						Optional.ofNullable(repositoryType).orElse(ISVNManager.RepositoryKind.FSFS).id));
+		watch.commandLong(ISVNCallListener.CREATE, parameters, callback(monitor), p -> admin.create(//
+				new File(repositoryPath), //
+				(options & Options.DISABLE_FSYNC_COMMIT) != 0, //
+				(options & Options.KEEP_LOG) != 0, //
+				Optional.ofNullable(configPath).map(File::new).orElse(null),
+				Optional.ofNullable(repositoryType).orElse(ISVNManager.RepositoryKind.FSFS).id));
 	}
 
 	@Override
@@ -82,7 +83,7 @@ final class SvnKit1_10Manager implements ISVNManager {
 		parameters.put("path", path); //$NON-NLS-1$
 		parameters.put("range", range); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.DELTIFY, parameters, callback(monitor), p -> admin.deltify(//
+		watch.commandLong(ISVNCallListener.DELTIFY, parameters, callback(monitor), p -> admin.deltify(//
 				new File(path), //
 				new RevisionAdapter(range.from).adapt(), //
 				new RevisionAdapter(range.to).adapt()));
@@ -96,11 +97,10 @@ final class SvnKit1_10Manager implements ISVNManager {
 		parameters.put("targetPath", targetPath); //$NON-NLS-1$
 		parameters.put("options", options); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.HOT_COPY, parameters, callback(monitor),
-				p -> admin.hotcopy(//
-						new File(path), //
-						new File(targetPath), //
-						(options & Options.CLEAN_LOGS) != 0));
+		watch.commandLong(ISVNCallListener.HOT_COPY, parameters, callback(monitor), p -> admin.hotcopy(//
+				new File(path), //
+				new File(targetPath), //
+				(options & Options.CLEAN_LOGS) != 0));
 	}
 
 	@Override
@@ -114,41 +114,83 @@ final class SvnKit1_10Manager implements ISVNManager {
 		parameters.put("callback", callback); //$NON-NLS-1$
 		parameters.put("options", options); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.operation(ISVNCallListener.DUMP, parameters, callback(monitor),
-				p -> admin.dump(//
-						new File(path), //
-						dataOut, //
-						new RevisionAdapter(range.from).adapt(), //
-						new RevisionAdapter(range.to).adapt(), //
-						(options & Options.INCREMENTAL) != 0, //
-						(options & Options.USE_DELTAS) != 0, //
-						new AdaptReposNotifyCallback(composite)));
+		watch.commandLong(ISVNCallListener.DUMP, parameters, callback(monitor), p -> admin.dump(//
+				new File(path), //
+				dataOut, //
+				new RevisionAdapter(range.from).adapt(), //
+				new RevisionAdapter(range.to).adapt(), //
+				(options & Options.INCREMENTAL) != 0, //
+				(options & Options.USE_DELTAS) != 0, //
+				new AdaptReposNotifyCallback(composite)//
+				));
 	}
 
 	@Override
 	public void listDBLogs(String path, ISVNRepositoryMessageCallback receiver, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("receiver", receiver); //$NON-NLS-1$
+		parameters.put("options", options); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.LIST_DB_LOGS, parameters, callback(monitor),
+				p -> listBDLogs(path, receiver, options));
+	}
+
+	private void listBDLogs(String path, ISVNRepositoryMessageCallback receiver, long options) throws ClientException {
+		if ((options & Options.UNUSED_ONLY) != 0) {
+			admin.listUnusedDBLogs(new File(path), new AdaptMessageReceiver(receiver));
+		} else {
+			admin.listDBLogs(new File(path), new AdaptMessageReceiver(receiver));
+		}
 	}
 
 	@Override
 	public void load(String path, InputStream dataInput, SVNRevisionRange range, String relativePath,
 			ISVNRepositoryNotificationCallback callback, long options, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("dataInput", dataInput); //$NON-NLS-1$
+		parameters.put("range", range); //$NON-NLS-1$
+		parameters.put("relativePath", relativePath); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("options", options); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.LOAD, parameters, callback(monitor), p -> admin.load(//
+				new File(path), //
+				dataInput, //
+				new RevisionAdapter(range.from).adapt(), //
+				new RevisionAdapter(range.to).adapt(), //
+				(options & Options.IGNORE_UUID) != 0, //
+				(options & Options.FORCE_UUID) != 0, //
+				(options & Options.USE_PRECOMMIT_HOOK) != 0, //
+				(options & Options.USE_POSTCOMMIT_HOOK) != 0, //
+				relativePath, //
+				new AdaptReposNotifyCallback(composite)//
+				));
 	}
 
 	@Override
 	public void listTransactions(String path, ISVNRepositoryMessageCallback receiver, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("receiver", receiver); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.LIST_TRANSACTIONS, parameters, callback(monitor),
+				p -> admin.lstxns(new File(path), new AdaptMessageReceiver(receiver)));
 	}
 
 	@Override
 	public long recover(String path, ISVNRepositoryNotificationCallback callback, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		//TODO
-		return 0;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		return watch.queryLong(ISVNCallListener.RECOVER, parameters, callback(monitor),
+				p -> admin.recover(new File(path), new AdaptReposNotifyCallback(composite)));
 	}
 
 	@Override

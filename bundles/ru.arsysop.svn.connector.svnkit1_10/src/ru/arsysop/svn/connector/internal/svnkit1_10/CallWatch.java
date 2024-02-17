@@ -72,10 +72,25 @@ final class CallWatch {
 		}
 	}
 
-	void commandSafe(String method, Map<String, Object> parameters, CommandSafe command) {
+	<V> V queryLong(String method, Map<String, Object> parameters, ProgressCallback progress, QueryLong<V> query)
+			throws SVNConnectorException {
 		asked(method, parameters);
-		command.command(parameters);
-		succeeded(method, parameters, null);//oh, no! we need to change this interface
+		try {
+			notifications.add(progress);
+			progress.start();
+			watchdog.add(progress);
+			V value = query.query(parameters);
+			succeeded(method, parameters, null);//oh, no! we need to change this interface
+			return value;
+		} catch (ClientException ex) {
+			SVNConnectorException wrap = wrap(ex);
+			failed(method, parameters, wrap);
+			throw wrap;
+		} finally {
+			progress.finish();
+			watchdog.remove(progress);
+			notifications.remove(progress);
+		}
 	}
 
 	void commandFast(String method, Map<String, Object> parameters, CommandFast command) throws SVNConnectorException {
@@ -90,14 +105,14 @@ final class CallWatch {
 		}
 	}
 
-	void operation(String method, Map<String, Object> parameters, ProgressCallback progress, Operation operation)
+	void commandLong(String method, Map<String, Object> parameters, ProgressCallback progress, CommandLong command)
 			throws SVNConnectorException {
 		asked(method, parameters);
 		try {
 			notifications.add(progress);
 			progress.start();
 			watchdog.add(progress);
-			operation.operation(parameters);
+			command.command(parameters);
 			succeeded(method, parameters, null);//oh, no! we need to change this interface
 		} catch (ClientException ex) {
 			SVNConnectorException wrap = wrap(ex);
@@ -108,6 +123,12 @@ final class CallWatch {
 			watchdog.remove(progress);
 			notifications.remove(progress);
 		}
+	}
+
+	void commandSafe(String method, Map<String, Object> parameters, CommandSafe command) {
+		asked(method, parameters);
+		command.command(parameters);
+		succeeded(method, parameters, null);//oh, no! we need to change this interface
 	}
 
 	private void asked(String method, Map<String, Object> parameters) {

@@ -19,24 +19,15 @@
  *     ArSysOp - initial API and implementation
  */
 
-package ru.arsysop.svn.connector.internal.adapt.svjhl;
+package ru.arsysop.svn.connector.internal.svnkit1_10;
 
-import java.util.Objects;
+import java.util.Map;
 
-import org.eclipse.team.svn.core.connector.ISVNNotificationCallback;
+import org.apache.subversion.javahl.ClientException;
 
-import ru.arsysop.svn.connector.internal.adapt.jhlsv.ClientNotifyInformationAdapter;
+@FunctionalInterface
+public interface QueryLong<V> {
 
-public final class AdaptClientNotifyCallback implements org.apache.subversion.javahl.callback.ClientNotifyCallback {
+	V query(Map<String, Object> parameters) throws ClientException;
 
-	private final ISVNNotificationCallback callback;
-
-	public AdaptClientNotifyCallback(ISVNNotificationCallback notify) {
-		callback = Objects.requireNonNull(notify);
-	}
-
-	@Override
-	public void onNotify(org.apache.subversion.javahl.ClientNotifyInformation info) {
-		callback.notify(new ClientNotifyInformationAdapter(info).adapt());
-	}
 }
