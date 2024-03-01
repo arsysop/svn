@@ -273,7 +273,12 @@ final class SvnKit1_10Manager implements ISVNManager {
 
 	@Override
 	public void removeLocks(String path, String[] locks, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("locks", locks); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.REMOVE_LOCKS, parameters, callback(monitor), //
+				p -> admin.rmlocks(new File(path), locks));
 	}
 
 	@Override
