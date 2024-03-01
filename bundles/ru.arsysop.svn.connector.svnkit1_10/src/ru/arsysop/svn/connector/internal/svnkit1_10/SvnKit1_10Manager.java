@@ -295,7 +295,12 @@ final class SvnKit1_10Manager implements ISVNManager {
 	@Override
 	public void pack(String path, ISVNRepositoryNotificationCallback callback, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.PACK, parameters, callback(monitor), //
+				p -> admin.pack(new File(path), new AdaptReposNotifyCallback(composite)));
 	}
 
 	private ProgressCallback callback(ISVNProgressMonitor monitor) {
