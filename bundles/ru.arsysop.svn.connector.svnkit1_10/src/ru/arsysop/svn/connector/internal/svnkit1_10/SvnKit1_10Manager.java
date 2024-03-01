@@ -284,7 +284,12 @@ final class SvnKit1_10Manager implements ISVNManager {
 	@Override
 	public void upgrade(String path, ISVNRepositoryNotificationCallback callback, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.REPOSITORY_UPGRADE, parameters, callback(monitor), //
+				p -> admin.upgrade(new File(path), new AdaptReposNotifyCallback(composite)));
 	}
 
 	@Override
