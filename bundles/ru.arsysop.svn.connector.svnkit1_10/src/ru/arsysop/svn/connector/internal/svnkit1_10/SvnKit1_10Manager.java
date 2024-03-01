@@ -211,7 +211,12 @@ final class SvnKit1_10Manager implements ISVNManager {
 	@Override
 	public void removeTransaction(String path, String[] transactions, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("transactions", transactions); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.REMOVE_TRANSACTIONS, parameters, callback(monitor),
+				p -> admin.rmtxns(new File(path), transactions));
 	}
 
 	@Override
