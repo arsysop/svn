@@ -24,10 +24,11 @@ package ru.arsysop.svn.connector.internal.svnkit1_10;
 import java.util.Map;
 
 import org.apache.subversion.javahl.ClientException;
+import org.apache.subversion.javahl.SubversionException;
 
 @FunctionalInterface
 interface CommandLong {
 
-	void command(Map<String, Object> parameters) throws ClientException;
+	void command(Map<String, Object> parameters) throws ClientException, SubversionException;
 
 }

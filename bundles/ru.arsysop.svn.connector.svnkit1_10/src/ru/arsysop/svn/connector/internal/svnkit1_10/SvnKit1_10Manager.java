@@ -222,7 +222,18 @@ final class SvnKit1_10Manager implements ISVNManager {
 	@Override
 	public void setRevisionProperty(SVNEntryReference reference, SVNProperty property, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("property", property); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.SET_REPOSITORY_REVISION_PROPERTY, parameters, callback(monitor),
+				p -> admin.setRevProp(new File(reference.path), //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
+						property.name, //
+						property.value, //
+						(options & Options.USE_PREREVPROPCHANGE_HOOK) != 0, //
+						(options & Options.USE_POSTREVPROPCHANGE_HOOK) != 0));
 	}
 
 	@Override
