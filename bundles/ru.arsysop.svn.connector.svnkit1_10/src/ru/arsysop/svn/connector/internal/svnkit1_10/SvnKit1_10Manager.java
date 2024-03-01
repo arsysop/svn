@@ -239,7 +239,17 @@ final class SvnKit1_10Manager implements ISVNManager {
 	@Override
 	public void verify(String path, SVNRevisionRange range, ISVNRepositoryNotificationCallback callback,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("range", range); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.VERIFY, parameters, callback(monitor),
+				p -> admin.verify(new File(path), //
+						new RevisionAdapter(range.from).adapt(), //
+						new RevisionAdapter(range.to).adapt(), //
+						new AdaptReposNotifyCallback(composite)//
+						));
 	}
 
 	@Override
