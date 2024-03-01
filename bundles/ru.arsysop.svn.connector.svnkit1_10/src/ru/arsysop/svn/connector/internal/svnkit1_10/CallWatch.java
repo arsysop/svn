@@ -24,6 +24,7 @@ package ru.arsysop.svn.connector.internal.svnkit1_10;
 import java.util.Map;
 
 import org.apache.subversion.javahl.ClientException;
+import org.apache.subversion.javahl.SubversionException;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.team.svn.core.connector.ISVNCallListener;
 import org.eclipse.team.svn.core.connector.SVNConnectorAuthenticationException;
@@ -118,6 +119,10 @@ final class CallWatch {
 			SVNConnectorException wrap = wrap(ex);
 			failed(method, parameters, wrap);
 			throw wrap;
+		} catch (SubversionException ex) {
+			SVNConnectorException wrap = wrap(ex);
+			failed(method, parameters, wrap);
+			throw wrap;
 		} finally {
 			progress.finish();
 			watchdog.remove(progress);
@@ -160,6 +165,10 @@ final class CallWatch {
 			return new SVNConnectorUnresolvedConflictException(ex.getMessage(), ex);
 		}
 		return new SVNConnectorException(ex.getMessage(), ex.getAprError(), ex);
+	}
+
+	private SVNConnectorException wrap(SubversionException ex) {
+		return new SVNConnectorException(ex.getMessage(), ex);
 	}
 
 	private boolean authenticationFailure(ClientException t) {
