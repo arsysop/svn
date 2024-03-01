@@ -24,9 +24,11 @@ package ru.arsysop.svn.connector.internal.svnkit1_10;
 import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.subversion.javahl.ClientException;
 import org.apache.subversion.javahl.ISVNRepos;
@@ -47,6 +49,7 @@ import org.eclipse.team.svn.core.utility.SVNRepositoryNotificationComposite;
 
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptMessageReceiver;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptReposNotifyCallback;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.ReposFreezeActionNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
 
 final class SvnKit1_10Manager implements ISVNManager {
@@ -196,7 +199,13 @@ final class SvnKit1_10Manager implements ISVNManager {
 	@Override
 	public void freeze(ISVNRepositoryFreezeAction action, String[] paths, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("action", action); //$NON-NLS-1$
+		parameters.put("paths", paths); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.FREEZE, parameters, callback(monitor),
+				p -> admin.freeze(new ReposFreezeActionNullableAdapter(action).adapt(),
+						Arrays.stream(paths).map(File::new).collect(Collectors.toList()).toArray(new File[0])));
 	}
 
 	@Override
