@@ -47,8 +47,10 @@ import org.eclipse.team.svn.core.connector.SVNProperty;
 import org.eclipse.team.svn.core.connector.SVNRevisionRange;
 import org.eclipse.team.svn.core.utility.SVNRepositoryNotificationComposite;
 
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptMessageReceiver;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptReposNotifyCallback;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.ReposFreezeActionNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
 
@@ -244,7 +246,7 @@ final class SvnKit1_10Manager implements ISVNManager {
 		parameters.put("range", range); //$NON-NLS-1$
 		parameters.put("callback", callback); //$NON-NLS-1$
 		parameters.put("monitor", monitor); //$NON-NLS-1$
-		watch.commandLong(ISVNCallListener.VERIFY, parameters, callback(monitor),
+		watch.commandLong(ISVNCallListener.VERIFY, parameters, callback(monitor), //
 				p -> admin.verify(new File(path), //
 						new RevisionAdapter(range.from).adapt(), //
 						new RevisionAdapter(range.to).adapt(), //
@@ -254,8 +256,19 @@ final class SvnKit1_10Manager implements ISVNManager {
 
 	@Override
 	public SVNLock[] listLocks(String path, SVNDepth depth, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		//TODO
-		return null;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		return watch.queryLong(ISVNCallListener.LIST_LOCKS, parameters, callback(monitor), //
+				p -> admin.lslocks(//
+						new File(path), //
+						new DepthAdapter(depth).adapt())
+				.stream()
+				.map(LockNullableAdapter::new)
+				.map(LockNullableAdapter::adapt)
+				.collect(Collectors.toList())
+				.toArray(new SVNLock[0]));
 	}
 
 	@Override
