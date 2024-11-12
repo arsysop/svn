@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 ArSysOp
+ * Copyright (c) 2023, 2025 ArSysOp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -64,14 +65,17 @@ import org.eclipse.team.svn.core.connector.configuration.ISVNConfigurationEventH
 import org.tmatesoft.svn.core.internal.wc.SVNFileUtil;
 import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
+import ru.arsysop.svn.connector.internal.adapt.SvnNullableArray;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InfoCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InheritedCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.LogMessageCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.PropertyCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionRangeAdapter;
 
 //TODO
 final class SvnKit1_10Connector implements ISVNConnector {
@@ -486,8 +490,27 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void listHistoryLog(SVNEntryReference reference, SVNRevisionRange[] revisionRanges, String[] revProps,
 			long limit, long options, ISVNLogEntryCallback cb, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.listHistoryLog()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("revisionRanges", revisionRanges); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("limit", Long.valueOf(limit)); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("cb", cb); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
+		watch.commandLong(ISVNCallListener.LIST_HISTORY_LOG, parameters, callback(monitor), //
+				p -> client.logMessages(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
+						Arrays.asList(new SvnNullableArray<>(revisionRanges,
+								org.apache.subversion.javahl.types.RevisionRange[]::new,
+								r -> new RevisionRangeAdapter(r).adapt()).adapt()), //
+						(options & Options.STOP_ON_COPY) != 0, //
+						(options & Options.DISCOVER_PATHS) != 0, //
+						(options & Options.INCLUDE_MERGED_REVISIONS) != 0, //
+						new HashSet<>(Arrays.asList(revProps)), //
+						limit, //
+						new LogMessageCallbackAdapter(cb).adapt()));
 	}
 
 	@Override
