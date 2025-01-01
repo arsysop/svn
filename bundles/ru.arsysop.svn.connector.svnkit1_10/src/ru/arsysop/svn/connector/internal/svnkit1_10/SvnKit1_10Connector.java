@@ -227,8 +227,16 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void unlock(String[] path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.unlock()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.LOCK, //
+				parameters, //
+				callback(monitor), //
+				p -> client.unlock(//
+						new HashSet<>(Arrays.asList(path)), //
+						(options & Options.FORCE) != 0));
 	}
 
 	@Override
