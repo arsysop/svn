@@ -242,8 +242,20 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void add(String path, SVNDepth depth, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.add()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.LOCK, //
+				parameters, //
+				callback(monitor), //
+				p -> client.add(path, //
+						new DepthAdapter(depth).adapt(), //
+						(options & Options.FORCE) != 0, //
+						(options & Options.INCLUDE_IGNORED) != 0, //
+						(options & Options.IGNORE_AUTOPROPS) != 0, //
+						(options & Options.INCLUDE_PARENTS) != 0));
 	}
 
 	@SuppressWarnings("rawtypes")
