@@ -299,9 +299,24 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public long switchTo(String path, SVNEntryRevisionReference toReference, SVNDepth depth, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.switchTo()");
-		//TODO
-		return 0;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("toReference", toReference);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		return watch.queryLong(ISVNCallListener.SWITCH, //
+				parameters, //
+				callback(monitor), p -> client.doSwitch(//
+						path, //
+						toReference.path, //
+						new RevisionAdapter(toReference.revision).adapt(), //
+						new RevisionAdapter(toReference.pegRevision).adapt(), //
+						new DepthAdapter(depth).adapt(), //
+						(options & Options.DEPTH_IS_STICKY) != 0, //
+						(options & Options.IGNORE_EXTERNALS) != 0, //
+						(options & Options.ALLOW_UNVERSIONED_OBSTRUCTIONS) != 0, //
+						(options & Options.IGNORE_ANCESTRY) != 0));
 	}
 
 	@Override
