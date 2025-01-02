@@ -401,8 +401,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void cleanup(String path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.cleanup()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.CLEANUP, //
+				parameters, //
+				callback(monitor), //
+				p -> client.cleanup(path));
 	}
 
 	@Override
