@@ -291,9 +291,22 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public long[] update(String[] path, SVNRevision revision, SVNDepth depth, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.update()");
-		//TODO
-		return null;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("revision", revision);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		return watch.queryLong(ISVNCallListener.UPDATE, //
+				parameters, //
+				callback(monitor), p -> client.update(//
+						new HashSet<>(Arrays.asList(path)), //
+						new RevisionAdapter(revision).adapt(), //
+						new DepthAdapter(depth).adapt(), //
+						(options & Options.DEPTH_IS_STICKY) != 0, //
+						(options & Options.INCLUDE_PARENTS) != 0, //
+						(options & Options.IGNORE_EXTERNALS) != 0, //
+						(options & Options.ALLOW_UNVERSIONED_OBSTRUCTIONS) != 0));
 	}
 
 	@Override
