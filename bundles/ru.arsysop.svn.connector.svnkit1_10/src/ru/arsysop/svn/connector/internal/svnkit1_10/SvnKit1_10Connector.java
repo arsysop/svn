@@ -469,8 +469,19 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void mergeReintegrate(SVNEntryReference reference, String localPath, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.mergeReintegrate()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("localPath", localPath);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.MERGE_REINTEGRATE, //
+				parameters, //
+				callback(monitor), //
+				p -> client.mergeReintegrate(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
+						localPath, //
+						(options & Options.SIMULATE) != 0));
 	}
 
 	@Override
