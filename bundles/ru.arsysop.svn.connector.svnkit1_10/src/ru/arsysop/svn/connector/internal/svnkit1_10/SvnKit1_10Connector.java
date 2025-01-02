@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.subversion.javahl.ClientException;
+import org.apache.subversion.javahl.CommitInfo;
 import org.eclipse.team.svn.core.connector.ISVNAnnotationCallback;
 import org.eclipse.team.svn.core.connector.ISVNCallListener;
 import org.eclipse.team.svn.core.connector.ISVNChangeListCallback;
@@ -258,12 +259,33 @@ final class SvnKit1_10Connector implements ISVNConnector {
 						(options & Options.INCLUDE_PARENTS) != 0));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void commit(String[] path, String message, String[] changeLists, SVNDepth depth, long options, Map revProps,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.commit()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("message", message);
+		parameters.put("changeLists", changeLists);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("revProps", revProps);
+		parameters.put("monitor", monitor);
+		CommitStatusCallback status = new CommitStatusCallback(monitor);
+		watch.commandCallback(ISVNCallListener.COMMIT, //
+				parameters, //
+				callback(monitor), //
+				p -> client.commit(//
+						new HashSet<>(Arrays.asList(path)), //
+						new DepthAdapter(depth).adapt(), //
+						(options & Options.KEEP_LOCKS) != 0, //
+						(options & Options.KEEP_CHANGE_LIST) != 0, //
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //
+						new RevProps((Map<String, Object>) revProps).adapt(), //
+						new CommitMessage(message), status),
+				p -> Optional.ofNullable(status.info)//
+				.map(CommitInfo::getPostCommitError)//
+				.ifPresent(e -> p.put("lastPostCommitError", e)));
 	}
 
 	@Override

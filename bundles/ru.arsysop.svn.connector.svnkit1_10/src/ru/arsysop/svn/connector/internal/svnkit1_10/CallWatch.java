@@ -108,12 +108,19 @@ final class CallWatch {
 
 	void commandLong(String method, Map<String, Object> parameters, ProgressCallback progress, CommandLong command)
 			throws SVNConnectorException {
+		commandCallback(method, parameters, progress, command, p -> {
+		});
+	}
+
+	void commandCallback(String method, Map<String, Object> parameters, ProgressCallback progress, CommandLong command,
+			CommandCallback callback) throws SVNConnectorException {
 		asked(method, parameters);
 		try {
 			notifications.add(progress);
 			progress.start();
 			watchdog.add(progress);
 			command.command(parameters);
+			callback.accept(parameters);
 			succeeded(method, parameters, null);//oh, no! we need to change this interface
 		} catch (ClientException ex) {
 			SVNConnectorException wrap = wrap(ex);
