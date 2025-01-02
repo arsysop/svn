@@ -384,8 +384,19 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void relocate(String from, String to, String path, SVNDepth depth, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.relocate()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("from", from);
+		parameters.put("to", to);
+		parameters.put("path", path);
+		parameters.put("depth", depth);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.RELOCATE, //
+				parameters, //
+				callback(monitor), //
+				p -> client.relocate(from, //
+						to, //
+						path, //
+						depth == SVNDepth.INFINITY));
 	}
 
 	@Override
