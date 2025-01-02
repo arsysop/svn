@@ -335,8 +335,26 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void revert(String[] paths, SVNDepth depth, String[] changeLists, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.revert()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("paths", paths);
+		parameters.put("depth", depth);
+		parameters.put("changeLists", changeLists);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.REVERT, //
+				parameters, //
+				callback(monitor), //
+				p -> revert(paths, //
+						depth, //
+						changeLists));
+	}
+
+	private void revert(String[] paths, SVNDepth depth, String[] changeLists) throws ClientException {
+		for (String path : paths) {
+			client.revert(path, //
+					new DepthAdapter(depth).adapt(), //
+					Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null));
+		}
 	}
 
 	@Override
