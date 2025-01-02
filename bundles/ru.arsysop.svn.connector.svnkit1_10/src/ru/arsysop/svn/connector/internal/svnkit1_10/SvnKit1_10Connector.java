@@ -414,8 +414,27 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void mergeTwo(SVNEntryRevisionReference reference1, SVNEntryRevisionReference reference2, String localPath,
 			SVNDepth depth, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.mergeTwo()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference1", reference1);
+		parameters.put("reference2", reference2);
+		parameters.put("localPath", localPath);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.MERGE_TWO, //
+				parameters, //
+				callback(monitor), //
+				p -> client.merge(//
+						reference1.path, //
+						new RevisionAdapter(reference1.revision).adapt(), //
+						reference2.path, //
+						new RevisionAdapter(reference2.revision).adapt(), //
+						localPath, //
+						(options & Options.FORCE) != 0, //
+						new DepthAdapter(depth).adapt(), //
+						(options & Options.IGNORE_ANCESTRY) != 0, //
+						(options & Options.SIMULATE) != 0, //
+						(options & Options.RECORD_ONLY) != 0));
 	}
 
 	@Override
