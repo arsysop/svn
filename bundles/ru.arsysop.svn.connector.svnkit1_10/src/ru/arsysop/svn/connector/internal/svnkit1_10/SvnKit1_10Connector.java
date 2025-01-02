@@ -77,6 +77,7 @@ import ru.arsysop.svn.connector.internal.adapt.svjhl.LogMessageCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.PropertyCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionRangeAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.StatusCallbackAdapter;
 
 //TODO
 final class SvnKit1_10Connector implements ISVNConnector {
@@ -314,8 +315,24 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void status(String path, SVNDepth depth, long options, String[] changeLists,
 			ISVNEntryStatusCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.status()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("changeLists", changeLists);
+		parameters.put("callback", callback);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.STATUS, //
+				parameters, //
+				callback(monitor), //
+				p -> client.status(path, //
+						new DepthAdapter(depth).adapt(), //
+						(options & Options.SERVER_SIDE) != 0, //
+						(options & Options.INCLUDE_UNCHANGED) != 0, //
+						(options & Options.INCLUDE_IGNORED) != 0, //
+						(options & Options.IGNORE_EXTERNALS) != 0, //
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //
+						new StatusCallbackAdapter(callback).adapt()));
 	}
 
 	@Override
