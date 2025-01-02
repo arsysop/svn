@@ -20,8 +20,8 @@
 package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import java.nio.charset.StandardCharsets;
+import java.text.DateFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,11 +32,12 @@ import java.util.TimeZone;
 
 import org.eclipse.team.svn.core.connector.SVNProperty;
 
+import ru.arsysop.svn.connector.internal.adapt.RepositoryDateFormat;
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 
 public final class RevPropertyConverter extends SvnNullableConstructor<Map<String, byte[]>, Map<String, Object>> {
 
-	private final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS z"); //$NON-NLS-1$
+	private final DateFormat formatter = new RepositoryDateFormat().get();
 
 	public RevPropertyConverter(Map<String, byte[]> source) {
 		super(source);
