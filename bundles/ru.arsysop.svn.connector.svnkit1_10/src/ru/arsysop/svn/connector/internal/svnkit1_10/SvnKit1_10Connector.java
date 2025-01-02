@@ -415,8 +415,29 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void merge(SVNEntryReference reference, SVNRevisionRange[] revisions, String localPath, SVNDepth depth,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.merge()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("revisions", revisions);
+		parameters.put("localPath", localPath);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.MERGE, //
+				parameters, //
+				callback(monitor), //
+				p -> client.merge(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
+						Arrays.asList(new SvnNullableArray<>(revisions,
+								org.apache.subversion.javahl.types.RevisionRange[]::new,
+								r -> new RevisionRangeAdapter(r).adapt()).adapt()), //
+						localPath, //
+						(options & Options.FORCE) != 0, //
+						new DepthAdapter(depth).adapt(), //
+						(options & Options.IGNORE_MERGE_HISTORY) != 0, //
+						(options & Options.IGNORE_ANCESTRY) != 0, //
+						(options & Options.SIMULATE) != 0, //
+						(options & Options.RECORD_ONLY) != 0));
 	}
 
 	@SuppressWarnings("deprecation")
