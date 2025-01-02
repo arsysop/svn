@@ -231,7 +231,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		parameters.put("path", path);
 		parameters.put("options", Long.valueOf(options));
 		parameters.put("monitor", monitor);
-		watch.commandLong(ISVNCallListener.LOCK, //
+		watch.commandLong(ISVNCallListener.UNLOCK, //
 				parameters, //
 				callback(monitor), //
 				p -> client.unlock(//
