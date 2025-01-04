@@ -17,24 +17,36 @@
  *
  */
 
-package ru.arsysop.svn.connector.internal.adapt.svjhl;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
+import java.util.Collections;
+import java.util.Optional;
+
+import org.apache.subversion.javahl.types.Mergeinfo;
 import org.apache.subversion.javahl.types.RevisionRange;
+import org.eclipse.team.svn.core.connector.SVNMergeInfo;
 import org.eclipse.team.svn.core.connector.SVNRevisionRange;
 
+import ru.arsysop.svn.connector.internal.adapt.SvnNullableArray;
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 
-public final class RevisionRangeAdapter extends SvnNullableConstructor<SVNRevisionRange, RevisionRange> {
+public final class MergeInfoAdapter extends SvnNullableConstructor<Mergeinfo, SVNMergeInfo> {
 
-	public RevisionRangeAdapter(SVNRevisionRange source) {
+	public MergeInfoAdapter(Mergeinfo source) {
 		super(source);
 	}
 
 	@Override
-	protected RevisionRange adapt(SVNRevisionRange source) {
-		return new RevisionRange(//
-				new RevisionAdapter(source.from).adapt(), //
-				new RevisionAdapter(source.to).adapt());
+	protected SVNMergeInfo adapt(Mergeinfo source) {
+		SVNMergeInfo result = new SVNMergeInfo();
+		for (String path : Optional.ofNullable(source.getPaths()).orElseGet(Collections::emptySet)) {
+			result.addRevisions(path,
+					new SvnNullableArray<>(//
+							source.getRevisionRange(path).toArray(RevisionRange[]::new), //
+							SVNRevisionRange[]::new, //
+							s -> new RevisionRangeAdapter(s).adapt()).adapt());
+		}
+		return result;
 	}
 
 }

@@ -68,6 +68,7 @@ import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableArray;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.MergeInfoAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
@@ -476,9 +477,16 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public SVNMergeInfo getMergeInfo(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.getMergeInfo()");
-		//TODO
-		return null;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("monitor", monitor);
+		return watch.queryAdapt(ISVNCallListener.GET_MERGE_INFO, //
+				parameters, //
+				callback(monitor), //
+				p -> client.getMergeinfo(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt()),
+				v -> new MergeInfoAdapter(v).adapt());
 	}
 
 	@Override

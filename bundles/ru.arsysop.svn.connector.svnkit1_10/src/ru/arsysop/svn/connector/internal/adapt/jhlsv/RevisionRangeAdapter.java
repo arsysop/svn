@@ -17,24 +17,24 @@
  *
  */
 
-package ru.arsysop.svn.connector.internal.adapt.svjhl;
+package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 
 import org.apache.subversion.javahl.types.RevisionRange;
 import org.eclipse.team.svn.core.connector.SVNRevisionRange;
 
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 
-public final class RevisionRangeAdapter extends SvnNullableConstructor<SVNRevisionRange, RevisionRange> {
+public final class RevisionRangeAdapter extends SvnNullableConstructor<RevisionRange, SVNRevisionRange> {
 
-	public RevisionRangeAdapter(SVNRevisionRange source) {
+	public RevisionRangeAdapter(RevisionRange source) {
 		super(source);
 	}
 
 	@Override
-	protected RevisionRange adapt(SVNRevisionRange source) {
-		return new RevisionRange(//
-				new RevisionAdapter(source.from).adapt(), //
-				new RevisionAdapter(source.to).adapt());
+	protected SVNRevisionRange adapt(RevisionRange source) {
+		return new SVNRevisionRange(//
+				new RevisionAdapter(source.getFromRevision()).adapt(), //
+				new RevisionAdapter(source.getToRevision()).adapt());
 	}
 
 }
