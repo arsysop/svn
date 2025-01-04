@@ -22,6 +22,7 @@
 package ru.arsysop.svn.connector.internal.svnkit1_10;
 
 import java.util.Map;
+import java.util.function.Function;
 
 import org.apache.subversion.javahl.ClientException;
 import org.apache.subversion.javahl.SubversionException;
@@ -75,15 +76,20 @@ final class CallWatch {
 
 	<V> V queryLong(String method, Map<String, Object> parameters, ProgressCallback progress, QueryLong<V> query)
 			throws SVNConnectorException {
+		return queryAdapt(method, parameters, progress, query, Function.identity());
+	}
+
+	<V, A> A queryAdapt(String method, Map<String, Object> parameters, ProgressCallback progress, QueryLong<V> query,
+			Function<V, A> adapter) throws SVNConnectorException {
 		asked(method, parameters);
 		try {
 			notifications.add(progress);
 			progress.start();
 			watchdog.add(progress);
-			V value = query.query(parameters);
+			A value = adapter.apply(query.query(parameters));
 			succeeded(method, parameters, null);//oh, no! we need to change this interface
 			return value;
-		} catch (ClientException ex) {
+		} catch (SubversionException ex) {
 			SVNConnectorException wrap = wrap(ex);
 			failed(method, parameters, wrap);
 			throw wrap;
