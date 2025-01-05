@@ -74,6 +74,7 @@ import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InfoCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InheritedCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.LogKindAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.LogMessageCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.PropertyCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
@@ -504,8 +505,31 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void listMergeInfoLog(LogKind logKind, SVNEntryReference reference, SVNEntryReference mergeSourceReference,
 			SVNRevisionRange mergeSourceRange, String[] revProps, SVNDepth depth, long options, ISVNLogEntryCallback cb,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.listMergeInfoLog()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("logKind", logKind);
+		parameters.put("reference", reference);
+		parameters.put("mergeSourceReference", mergeSourceReference);
+		parameters.put("mergeSourceRange", mergeSourceRange);
+		parameters.put("revProps", revProps);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("cb", cb);
+		parameters.put("monitor", monitor);
+		final ISVNLogEntryCallback callback1 = cb;
+		watch.commandLong(ISVNCallListener.LIST_MERGE_INFO_LOG, //
+				parameters, //
+				callback(monitor), //
+				p -> client.getMergeinfoLog(//
+						new LogKindAdapter(logKind).adapt(), //
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
+						mergeSourceReference.path, //
+						new RevisionAdapter(mergeSourceReference.pegRevision).adapt(), //
+						new RevisionAdapter(mergeSourceRange.from).adapt(), //
+						new RevisionAdapter(mergeSourceRange.to).adapt(), //
+						(options & Options.DISCOVER_PATHS) != 0, //
+						new DepthAdapter(depth).adapt(), //
+						new HashSet<>(Arrays.asList(revProps)), //
+						new LogMessageCallbackAdapter(callback1).adapt()));
 	}
 
 	@Override
