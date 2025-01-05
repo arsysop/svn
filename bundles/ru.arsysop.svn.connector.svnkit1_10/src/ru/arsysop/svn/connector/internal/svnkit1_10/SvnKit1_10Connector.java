@@ -535,9 +535,16 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public String[] suggestMergeSources(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.suggestMergeSources()");
-		//TODO
-		return null;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("monitor", monitor);
+		return watch.queryAdapt(ISVNCallListener.SUGGEST_MERGE_SOURCES, //
+				parameters, //
+				callback(monitor), //
+				p -> client.suggestMergeSources(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt()),
+				v -> Optional.ofNullable(v).map(s -> s.toArray(String[]::new)).orElse(null));
 	}
 
 	@Override
