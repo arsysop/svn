@@ -71,6 +71,7 @@ import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.MergeInfoAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.ChoiceAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InfoCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InheritedCallbackAdapter;
@@ -543,8 +544,18 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void resolve(String path, Choice conflictResult, SVNDepth depth, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.resolve()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("conflictResult", conflictResult);
+		parameters.put("depth", depth);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.RESOLVE, //
+				parameters, //
+				callback(monitor), //
+				p -> client.resolve(//
+						path, //
+						new DepthAdapter(depth).adapt(), //
+						new ChoiceAdapter(conflictResult).adapt()));
 	}
 
 	@Override
