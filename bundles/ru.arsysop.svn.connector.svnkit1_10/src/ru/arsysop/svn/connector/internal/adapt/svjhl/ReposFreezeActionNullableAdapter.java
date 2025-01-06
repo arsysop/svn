@@ -1,20 +1,22 @@
 /*
- * Copyright (c) ArSysOp 2020-2024
- * 
- * ArSysOp and its affiliates make no warranty of any kind
- * with regard to this material.
- * 
- * ArSysOp expressly disclaims all warranties as to the material, express,
- * and implied, including but not limited to the implied warranties of
- * merchantability, fitness for a particular purpose and non-infringement of third
- * party rights.
- * 
- * In no event shall ArSysOp be liable to you or any other person for any damages,
- * including, without limitation, any direct, indirect, incidental or consequential
- * damages, expenses, lost profits, lost data or other damages arising out of the use,
- * misuse or inability to use the material and any derived software, even if ArSysOp,
- * its affiliate or an authorized dealer has been advised of the possibility of such damages.
+ * Copyright (c) 2023, 2025 ArSysOp
  *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Contributors:
+ *     ArSysOp - initial API and implementation
  */
 
 package ru.arsysop.svn.connector.internal.adapt.svjhl;
