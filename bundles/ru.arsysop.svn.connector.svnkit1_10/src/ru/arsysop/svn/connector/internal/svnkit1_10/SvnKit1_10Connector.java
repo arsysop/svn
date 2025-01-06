@@ -566,10 +566,22 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	}
 
 	@Override
-	public void addToChangeList(String[] paths, String targetChangeList, SVNDepth depth, String[] filterByChangeLists,
+	public void addToChangeList(String[] paths, String changelist, SVNDepth depth, String[] changeLists,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.addToChangeList()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("paths", paths);
+		parameters.put("changelist", changelist);
+		parameters.put("depth", depth);
+		parameters.put("changeLists", changeLists);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.ADD_TO_CHANGE_LIST, //
+				parameters, //
+				callback(monitor), //
+				p -> client.addToChangelist(//
+						new HashSet<>(Arrays.asList(paths)), //
+						changelist, //
+						new DepthAdapter(depth).adapt(),
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null)));
 	}
 
 	@Override
