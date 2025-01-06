@@ -587,8 +587,18 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void removeFromChangeLists(String[] paths, SVNDepth depth, String[] changeLists, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.removeFromChangeLists()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("paths", paths);
+		parameters.put("depth", depth);
+		parameters.put("changeLists", changeLists);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.REMOVE_FROM_CHANGE_LISTS, //
+				parameters, //
+				callback(monitor), //
+				p -> client.removeFromChangelists(//
+						new HashSet<>(Arrays.asList(paths)), //
+						new DepthAdapter(depth).adapt(), //
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null)));
 	}
 
 	@Override
