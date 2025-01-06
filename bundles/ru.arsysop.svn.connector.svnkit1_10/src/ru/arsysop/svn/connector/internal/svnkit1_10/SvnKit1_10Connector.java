@@ -619,9 +619,24 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public long exportTo(SVNEntryRevisionReference fromReference, String destPath, String nativeEOL, SVNDepth depth,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.exportTo()");
-		//TODO
-		return 0;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("fromReference", fromReference);
+		parameters.put("destPath", destPath);
+		parameters.put("nativeEOL", nativeEOL);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		return watch.queryLong(ISVNCallListener.EXPORT, //
+				parameters, //
+				callback(monitor), p -> client.doExport(//
+						fromReference.path, //
+						destPath, //
+						new RevisionAdapter(fromReference.revision).adapt(), //
+						new RevisionAdapter(fromReference.pegRevision).adapt(), //
+						(options & Options.FORCE) != 0, //
+						(options & Options.IGNORE_EXTERNALS) != 0, //
+						new DepthAdapter(depth).adapt(), //
+						nativeEOL));
 	}
 
 	@Override
