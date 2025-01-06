@@ -604,8 +604,26 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void dumpChangeLists(String[] changeLists, String rootPath, SVNDepth depth, ISVNChangeListCallback cb,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.dumpChangeLists()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("changeLists", changeLists);
+		parameters.put("rootPath", rootPath);
+		parameters.put("depth", depth);
+		parameters.put("cb", cb);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.DUMP_CHANGE_LISTS, //
+				parameters, //
+				callback(monitor), //
+				p -> client.getChangelists(//
+						rootPath, //
+						Arrays.asList(changeLists), //
+						new DepthAdapter(depth).adapt(), //
+						new org.apache.subversion.javahl.callback.ChangelistCallback() {
+
+							public void doChangelist(String path, String changelist) {
+								cb.next(path, changelist);
+							}
+
+						}));
 	}
 
 	@SuppressWarnings("rawtypes")
