@@ -685,8 +685,35 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diffTwo(SVNEntryRevisionReference refPrev, SVNEntryRevisionReference refNext, String relativeToDir,
 			String fileName, SVNDepth depth, long options, String[] changeLists, long outputOptions,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.diffTwo()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference1", refPrev);
+		parameters.put("reference2", refNext);
+		parameters.put("relativeToDir", relativeToDir);
+		parameters.put("fileName", fileName);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("changeLists", changeLists);
+		parameters.put("outputOptions", outputOptions);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.DIFF_TWO_FILE, //
+				parameters, //
+				callback(monitor), //
+				p -> client.diff(//
+						refPrev.path, //
+						new RevisionAdapter(refPrev.revision).adapt(), //
+						refNext.path, //
+						new RevisionAdapter(refNext.revision).adapt(), //
+						relativeToDir, //
+						fileName, //
+						new DepthAdapter(depth).adapt(),
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null),
+						(options & Options.IGNORE_ANCESTRY) != 0, //
+						(options & Options.SKIP_DELETED) != 0, //
+						(options & Options.FORCE) != 0, //
+						(options & Options.COPIES_AS_ADDITIONS) != 0, //
+						(options & Options.IGNORE_PROPERTY_CHANGES) != 0, //
+						(options & Options.IGNORE_CONTENT_CHANGES) != 0, //
+						new DiffOptionsAdapter(outputOptions).adapt()));
 	}
 
 	@Override
@@ -728,8 +755,35 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diffTwo(SVNEntryRevisionReference refPrev, SVNEntryRevisionReference refNext, String relativeToDir,
 			OutputStream stream, SVNDepth depth, long options, String[] changeLists, long outputOptions,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.diffTwo()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference1", refPrev);
+		parameters.put("reference2", refNext);
+		parameters.put("relativeToDir", relativeToDir);
+		parameters.put("stream", stream);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("changeLists", changeLists);
+		parameters.put("outputOptions", Long.valueOf(outputOptions));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.DIFF_TWO_STREAM, //
+				parameters, //
+				callback(monitor), //
+				p -> client.diff(//
+						refPrev.path, //
+						new RevisionAdapter(refPrev.revision).adapt(), //
+						refNext.path, //
+						new RevisionAdapter(refNext.revision).adapt(), //
+						relativeToDir, //
+						stream, //
+						new DepthAdapter(depth).adapt(),
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null),
+						(options & Options.IGNORE_ANCESTRY) != 0, //
+						(options & Options.SKIP_DELETED) != 0, //
+						(options & Options.FORCE) != 0, //
+						(options & Options.COPIES_AS_ADDITIONS) != 0, //
+						(options & Options.IGNORE_PROPERTY_CHANGES) != 0, //
+						(options & Options.IGNORE_CONTENT_CHANGES) != 0, //
+						new DiffOptionsAdapter(outputOptions).adapt()));
 	}
 
 	@Override
