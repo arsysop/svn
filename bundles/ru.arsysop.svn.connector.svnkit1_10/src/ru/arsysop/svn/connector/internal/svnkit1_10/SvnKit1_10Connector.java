@@ -800,7 +800,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		parameters.put("changeLists", changeLists);
 		parameters.put("outputOptions", Long.valueOf(outputOptions));
 		parameters.put("monitor", monitor);
-		watch.commandLong(ISVNCallListener.DIFF_FILE, //
+		watch.commandLong(ISVNCallListener.DIFF_STREAM, //
 				parameters, //
 				callback(monitor), //
 				p -> client.diff(//
