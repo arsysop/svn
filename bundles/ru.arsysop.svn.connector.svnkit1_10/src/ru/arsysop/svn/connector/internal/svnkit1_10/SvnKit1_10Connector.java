@@ -54,6 +54,7 @@ import org.eclipse.team.svn.core.connector.SVNConflictResolution.Choice;
 import org.eclipse.team.svn.core.connector.SVNConnectorException;
 import org.eclipse.team.svn.core.connector.SVNDepth;
 import org.eclipse.team.svn.core.connector.SVNEntry;
+import org.eclipse.team.svn.core.connector.SVNEntryInfo;
 import org.eclipse.team.svn.core.connector.SVNEntryReference;
 import org.eclipse.team.svn.core.connector.SVNEntryRevisionReference;
 import org.eclipse.team.svn.core.connector.SVNExternalReference;
@@ -63,6 +64,7 @@ import org.eclipse.team.svn.core.connector.SVNProperty;
 import org.eclipse.team.svn.core.connector.SVNRevision;
 import org.eclipse.team.svn.core.connector.SVNRevisionRange;
 import org.eclipse.team.svn.core.connector.configuration.ISVNConfigurationEventHandler;
+import org.eclipse.team.svn.core.utility.SVNUtility;
 import org.tmatesoft.svn.core.internal.wc.SVNFileUtil;
 import org.tmatesoft.svn.core.javahl17.SVNClientImpl;
 
@@ -832,8 +834,31 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void diffStatus(SVNEntryReference reference, SVNRevisionRange range, SVNDepth depth, long options,
 			String[] changeLists, ISVNDiffStatusCallback cb, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.diffStatus()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("range", range);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("changeLists", changeLists);
+		parameters.put("cb", cb);
+		parameters.put("monitor", monitor);
+		SVNEntryInfo[] infos = SVNUtility.info(this, new SVNEntryRevisionReference(reference, range.from),
+				SVNDepth.EMPTY, monitor);
+		boolean isFile = infos.length > 0 && infos[0] != null && infos[0].kind == SVNEntry.Kind.FILE;
+		DiffSummarized callback = new DiffSummarized(reference.path, reference.path, isFile, cb);
+		watch.commandCallback(ISVNCallListener.DIFF_STATUS, //
+				parameters, //
+				callback(monitor), //
+				p -> client.diffSummarize(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
+						new RevisionAdapter(range.from).adapt(), //
+						new RevisionAdapter(range.to).adapt(), //
+						new DepthAdapter(depth).adapt(),
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //
+						(options & Options.IGNORE_ANCESTRY) != 0, //
+						callback), //
+				p -> callback.doLastDiff());
 	}
 
 	@Override
