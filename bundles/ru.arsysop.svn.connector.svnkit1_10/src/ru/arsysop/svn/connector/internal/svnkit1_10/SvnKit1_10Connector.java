@@ -945,8 +945,22 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void moveLocal(String[] srcPaths, String dstPath, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.moveLocal()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("srcPaths", srcPaths);
+		parameters.put("dstPath", dstPath);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.MOVE_LOCAL, parameters, callback(monitor), p -> client.move(//
+				new HashSet<>(Arrays.asList(srcPaths)), //
+				dstPath, //
+				(options & Options.FORCE) != 0, //
+				true, //
+				false, //
+				(options & Options.METADATA_ONLY) != 0, //
+				(options & Options.ALLOW_MIXED_REVISIONS) != 0, //
+				null, //
+				null, //
+				null));
 	}
 
 	@SuppressWarnings("rawtypes")
