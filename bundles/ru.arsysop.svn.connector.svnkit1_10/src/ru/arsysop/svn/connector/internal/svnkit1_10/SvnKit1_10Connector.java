@@ -928,8 +928,18 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void mkdir(String[] path, String message, long options, Map revProps, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.mkdir()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("message", message);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("revProps", revProps);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.MKDIR, parameters, callback(monitor), p -> client.mkdir(//
+				new HashSet<>(Arrays.asList(path)), //
+				(options & Options.INCLUDE_PARENTS) != 0, //
+				new RevProps(revProps).adapt(), //
+				new CommitMessage(message), //
+				new CommitStatusCallback(monitor)));
 	}
 
 	@Override
