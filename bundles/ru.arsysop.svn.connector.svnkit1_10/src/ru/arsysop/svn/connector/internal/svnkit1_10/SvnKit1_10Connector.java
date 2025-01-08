@@ -1002,7 +1002,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		parameters.put("monitor", monitor);
 		watch.commandLong(ISVNCallListener.COPY_LOCAL, parameters, callback(monitor), p -> client.copy(//
 				Arrays.asList(new SvnNullableArray<>(srcPaths, CopySource[]::new,
-				s -> new RevisionReverenceAdapter(s).adapt()).adapt()), //
+						s -> new RevisionReverenceAdapter(s).adapt()).adapt()), //
 				destPath, //
 				true, //
 				false, //
@@ -1017,8 +1017,24 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void copyRemote(SVNEntryRevisionReference[] srcPaths, String destPath, String message, long options,
 			Map revProps, Map<String, List<SVNExternalReference>> externalsToPin, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.copyRemote()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("srcPaths", srcPaths);
+		parameters.put("destPath", destPath);
+		parameters.put("message", message);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("revProps", revProps);
+		parameters.put("externalsToPin", externalsToPin);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.COPY_REMOTE, parameters, callback(monitor), p -> client.copy(//
+				Arrays.asList(new SvnNullableArray<>(srcPaths, CopySource[]::new,
+						s -> new RevisionReverenceAdapter(s).adapt()).adapt()), //
+				destPath, //
+				(options & Options.INTERPRET_AS_CHILD) != 0, //
+				(options & Options.INCLUDE_PARENTS) != 0, //
+				false, //
+				new RevProps(revProps).adapt(), //
+				new CommitMessage(message),
+				new CommitStatusCallback(monitor)));
 	}
 
 	@Override
