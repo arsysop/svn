@@ -35,6 +35,7 @@ import java.util.Optional;
 
 import org.apache.subversion.javahl.ClientException;
 import org.apache.subversion.javahl.CommitInfo;
+import org.apache.subversion.javahl.types.CopySource;
 import org.eclipse.team.svn.core.connector.ISVNAnnotationCallback;
 import org.eclipse.team.svn.core.connector.ISVNCallListener;
 import org.eclipse.team.svn.core.connector.ISVNChangeListCallback;
@@ -85,6 +86,7 @@ import ru.arsysop.svn.connector.internal.adapt.svjhl.LogMessageCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.PropertyCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionRangeAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionReverenceAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.StatusCallbackAdapter;
 
 //TODO
@@ -992,8 +994,22 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void copyLocal(SVNEntryRevisionReference[] srcPaths, String destPath, long options,
 			Map<String, List<SVNExternalReference>> externalsToPin, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.copyLocal()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("srcPaths", srcPaths);
+		parameters.put("destPath", destPath);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("externalsToPin", externalsToPin);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.COPY_LOCAL, parameters, callback(monitor), p -> client.copy(//
+				Arrays.asList(new SvnNullableArray<>(srcPaths, CopySource[]::new,
+				s -> new RevisionReverenceAdapter(s).adapt()).adapt()), //
+				destPath, //
+				true, //
+				false, //
+				(options & Options.IGNORE_EXTERNALS) != 0, //
+				null, //
+				null, //
+				null));
 	}
 
 	@SuppressWarnings("rawtypes")
