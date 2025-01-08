@@ -28,6 +28,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -953,8 +954,24 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void moveRemote(String[] srcPaths, String dstPath, String message, long options, Map revProps,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.moveRemote()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("srcPaths", srcPaths);
+		parameters.put("dstPath", dstPath);
+		parameters.put("message", message);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("revProps", revProps);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.MOVE_REMOTE, parameters, callback(monitor), p -> client.move(//
+				new LinkedHashSet<>(Arrays.asList(srcPaths)), //
+				dstPath, //
+				(options & Options.FORCE) != 0, //
+				(options & Options.INTERPRET_AS_CHILD) != 0, //
+				(options & Options.INCLUDE_PARENTS) != 0, //
+				false, //
+				true, //
+				new RevProps(revProps).adapt(), //
+				new CommitMessage(message), //
+				new CommitStatusCallback(monitor)));
 	}
 
 	@Override
