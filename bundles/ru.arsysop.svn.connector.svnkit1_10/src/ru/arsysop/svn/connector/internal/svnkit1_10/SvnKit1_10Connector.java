@@ -902,11 +902,25 @@ final class SvnKit1_10Connector implements ISVNConnector {
 				new InfoCallbackAdapter(cb).adapt()));
 	}
 
+	/**
+	 * Always returns <code>null</code>
+	 */
 	@Override
 	public SVNProperty[] streamFileContent(SVNEntryRevisionReference reference, long options, OutputStream stream,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.streamFileContent()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("stream", stream);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.STREAM_FILE_CONTENT, //
+				parameters, //
+				callback(monitor), //
+				p -> client.streamFileContent(//
+						reference.path, //
+						new RevisionAdapter(reference.revision).adapt(),
+						new RevisionAdapter(reference.pegRevision).adapt(), stream));
+		//looks strange, but corresponding to the known usages
 		return null;
 	}
 
