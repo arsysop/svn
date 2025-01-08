@@ -1047,8 +1047,18 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void removeRemote(String[] path, String message, long options, Map revProps, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.removeRemote()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("message", message);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("revProps", revProps);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.REMOVE_REMOTE, parameters, callback(monitor), p -> client.remove(//
+				new HashSet<>(Arrays.asList(path)), //
+				(options & Options.FORCE) != 0, false, //
+				new RevProps(revProps).adapt(), //
+				new CommitMessage(message), //
+				new CommitStatusCallback(monitor)));
 	}
 
 	@Override
