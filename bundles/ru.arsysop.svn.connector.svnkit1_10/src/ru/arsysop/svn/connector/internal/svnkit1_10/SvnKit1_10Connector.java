@@ -1039,8 +1039,17 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void removeLocal(String[] path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.removeLocal()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.REMOVE_LOCAL, parameters, callback(monitor), p -> client.remove(//
+				new HashSet<>(Arrays.asList(path)), //
+				(options & Options.FORCE) != 0, //
+				(options & Options.KEEP_LOCAL) != 0, //
+				null, //
+				null, //
+				null));
 	}
 
 	@SuppressWarnings("rawtypes")
