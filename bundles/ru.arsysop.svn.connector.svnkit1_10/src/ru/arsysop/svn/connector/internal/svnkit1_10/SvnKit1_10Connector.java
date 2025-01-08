@@ -827,8 +827,30 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diffStatusTwo(SVNEntryRevisionReference refPrev, SVNEntryRevisionReference refNext, SVNDepth depth,
 			long options, String[] changeLists, ISVNDiffStatusCallback cb, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.diffStatusTwo()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference1", refPrev);
+		parameters.put("reference2", refNext);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("changeLists", changeLists);
+		parameters.put("cb", cb);
+		parameters.put("monitor", monitor);
+		SVNEntryInfo[] infos = SVNUtility.info(this, refPrev, SVNDepth.EMPTY, monitor);
+		boolean isFile = infos.length > 0 && infos[0] != null && infos[0].kind == SVNEntry.Kind.FILE;
+		DiffSummarized callback = new DiffSummarized(refPrev.path, refNext.path, isFile, cb);
+		watch.commandCallback(ISVNCallListener.DIFF_STATUS_TWO, //
+				parameters, //
+				callback(monitor), //
+				p -> client.diffSummarize(//
+						refPrev.path, //
+						new RevisionAdapter(refPrev.revision).adapt(), //
+						refNext.path, //
+						new RevisionAdapter(refNext.revision).adapt(), //
+						new DepthAdapter(depth).adapt(),
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //
+						(options & Options.IGNORE_ANCESTRY) != 0, //
+						callback), //
+				p -> callback.doLastDiff());
 	}
 
 	@Override
