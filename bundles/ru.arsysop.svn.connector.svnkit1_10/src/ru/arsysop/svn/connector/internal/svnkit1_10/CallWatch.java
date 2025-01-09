@@ -28,6 +28,7 @@ import org.apache.subversion.javahl.ClientException;
 import org.apache.subversion.javahl.SubversionException;
 import org.eclipse.core.runtime.ListenerList;
 import org.eclipse.team.svn.core.connector.ISVNCallListener;
+import org.eclipse.team.svn.core.connector.ISVNNotificationCallback;
 import org.eclipse.team.svn.core.connector.SVNConnectorAuthenticationException;
 import org.eclipse.team.svn.core.connector.SVNConnectorCancelException;
 import org.eclipse.team.svn.core.connector.SVNConnectorException;
@@ -52,6 +53,14 @@ final class CallWatch {
 
 	void removeListener(ISVNCallListener listener) {
 		listeners.remove(listener);
+	}
+
+	void addCallback(ISVNNotificationCallback listener) {
+		notifications.add(listener);
+	}
+
+	void removeCallback(ISVNNotificationCallback listener) {
+		notifications.remove(listener);
 	}
 
 	<V> V querySafe(String method, Map<String, Object> parameters, QuerySafe<V> query) {
@@ -83,7 +92,7 @@ final class CallWatch {
 			Function<V, A> adapter) throws SVNConnectorException {
 		asked(method, parameters);
 		try {
-			notifications.add(progress);
+			addCallback(progress);
 			progress.start();
 			watchdog.add(progress);
 			A value = adapter.apply(query.query(parameters));
@@ -96,7 +105,7 @@ final class CallWatch {
 		} finally {
 			progress.finish();
 			watchdog.remove(progress);
-			notifications.remove(progress);
+			removeCallback(progress);
 		}
 	}
 
@@ -122,7 +131,7 @@ final class CallWatch {
 			CommandCallback callback) throws SVNConnectorException {
 		asked(method, parameters);
 		try {
-			notifications.add(progress);
+			addCallback(progress);
 			progress.start();
 			watchdog.add(progress);
 			command.command(parameters);
@@ -139,7 +148,7 @@ final class CallWatch {
 		} finally {
 			progress.finish();
 			watchdog.remove(progress);
-			notifications.remove(progress);
+			removeCallback(progress);
 		}
 	}
 

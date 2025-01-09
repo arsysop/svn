@@ -98,6 +98,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	private final CallWatch watch;
 	private final SVNClientImpl client;
 	private final List<ISVNCredentialsPrompt> prompts = new ArrayList<>();
+	private final List<ISVNNotificationCallback> notifications = new ArrayList<>();
 //FIXME: AF: not sure why do we need this
 	private final List<ISVNConfigurationEventHandler> handlers = new ArrayList<>();
 
@@ -179,15 +180,20 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void setNotificationCallback(ISVNNotificationCallback notify) {
-		System.out.println("SvnKit1_10Connector.setNotificationCallback()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("notify", notify);
+		notifications.stream().forEach(watch::removeCallback);
+		notifications.clear();
+		notifications.add(notify);
+		watch.commandSafe(ISVNCallListener.SET_NOTIFICATION_CALLBACK, parameters,
+				p -> notifications.stream().forEach(watch::addCallback));
 	}
 
 	@Override
 	public ISVNNotificationCallback getNotificationCallback() {
-		System.out.println("SvnKit1_10Connector.getNotificationCallback()");
-		//TODO
-		return null;
+		return watch.querySafe(ISVNCallListener.GET_NOTIFICATION_CALLBACK, //
+				Collections.emptyMap(), //
+				p -> notifications.stream().findAny().orElse(null));
 	}
 
 	@Override
