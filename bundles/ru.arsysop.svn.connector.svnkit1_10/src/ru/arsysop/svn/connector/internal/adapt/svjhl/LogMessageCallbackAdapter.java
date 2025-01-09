@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.subversion.javahl.callback.LogMessageCallback;
+import org.apache.subversion.javahl.types.ChangePath;
 import org.eclipse.team.svn.core.connector.ISVNLogEntryCallback;
 import org.eclipse.team.svn.core.connector.SVNLogEntry;
 import org.eclipse.team.svn.core.connector.SVNLogPath;
@@ -44,13 +45,13 @@ public final class LogMessageCallbackAdapter extends SvnNullableConstructor<ISVN
 
 	@Override
 	protected LogMessageCallback adapt(ISVNLogEntryCallback source) {
-		return new org.apache.subversion.javahl.callback.LogMessageCallback() {
+		return new LogMessageCallback() {
 
 			@Override
-			public void singleMessage(Set<org.apache.subversion.javahl.types.ChangePath> paths, long revision,
+			public void singleMessage(Set<ChangePath> paths, long revision,
 					Map<String, byte[]> revprops, boolean hasChildren) {
 				SVNLogEntry entry = convert(//
-						paths == null ? null : paths.toArray(org.apache.subversion.javahl.types.ChangePath[]::new), //
+						paths == null ? null : paths.toArray(ChangePath[]::new), //
 								revision, //
 								revprops, //
 								hasChildren//
@@ -58,7 +59,7 @@ public final class LogMessageCallbackAdapter extends SvnNullableConstructor<ISVN
 				source.next(entry);
 			}
 
-			private SVNLogEntry convert(org.apache.subversion.javahl.types.ChangePath[] paths, long revision,
+			private SVNLogEntry convert(ChangePath[] paths, long revision,
 					Map<String, byte[]> revprops, boolean hasChildren) {
 				if (revprops == null) {
 					// no access rights

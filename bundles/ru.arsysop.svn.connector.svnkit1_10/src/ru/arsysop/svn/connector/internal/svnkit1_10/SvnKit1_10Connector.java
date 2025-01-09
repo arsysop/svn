@@ -75,6 +75,7 @@ import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.MergeInfoAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.AnnotationCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.ChoiceAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DiffOptionsAdapter;
@@ -1100,8 +1101,23 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void annotate(SVNEntryReference reference, SVNRevisionRange revisionRange, long options, long diffOptions,
 			ISVNAnnotationCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.annotate()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("revisionRange", revisionRange);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("diffOptions", Long.valueOf(diffOptions));
+		parameters.put("callback", callback);
+		parameters.put("monitor", monitor);
+		final ISVNAnnotationCallback cb = callback;
+		watch.commandLong(ISVNCallListener.ANNOTATE, parameters, callback(monitor), //
+				p -> client.blame(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt(), //
+						new RevisionAdapter(revisionRange.from).adapt(), //
+						new RevisionAdapter(revisionRange.to).adapt(), //
+						(options & Options.IGNORE_MIME_TYPE) != 0, //
+						(options & Options.INCLUDE_MERGED_REVISIONS) != 0, //
+						new AnnotationCallbackAdapter(cb).adapt()));
 	}
 
 	@Override
