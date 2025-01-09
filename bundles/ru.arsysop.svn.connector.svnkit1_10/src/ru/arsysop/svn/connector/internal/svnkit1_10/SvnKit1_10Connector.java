@@ -1278,9 +1278,17 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public SVNProperty getRevisionProperty(SVNEntryReference reference, String name, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.getRevisionProperty()");
-		//TODO
-		return null;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("name", name);
+		parameters.put("monitor", monitor);
+		return watch.queryAdapt(ISVNCallListener.GET_REVISION_PROPERTY, //
+				parameters, //
+				callback(monitor), p -> client.revProperty(//
+						reference.path, //
+						name, //
+						new RevisionAdapter(reference.pegRevision).adapt()),
+				v -> new SVNProperty(name, v));
 	}
 
 	@Override
