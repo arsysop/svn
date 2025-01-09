@@ -1345,8 +1345,19 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void vacuum(String path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.vacuum()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("monitor", monitor);
+		//FIXME: AF: currently option constants are not defined, let's perform maximum cleanup
+		watch.commandLong(ISVNCallListener.VACUUM, parameters, callback(monitor), //
+				p -> client.vacuum(//
+						path, //
+						true, //
+						true, //
+						true, //
+						true, //
+						true));
 	}
 
 	private ProgressCallback callback(ISVNProgressMonitor monitor) {
