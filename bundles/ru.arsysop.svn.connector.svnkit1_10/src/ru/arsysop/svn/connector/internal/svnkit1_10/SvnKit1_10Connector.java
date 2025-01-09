@@ -1221,8 +1221,21 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void setPropertyLocal(String[] path, SVNProperty property, SVNDepth depth, long options,
 			String[] changeLists, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		//TODO
-		System.out.println("SvnKit1_10Connector.setPropertyLocal()");
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("property", property);
+		parameters.put("depth", depth);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("changeLists", changeLists);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.SET_PROPERTY_LOCAL, parameters, callback(monitor), //
+				p -> client.propertySetLocal(//
+						new HashSet<>(Arrays.asList(path)), //
+						property.name, //
+						property.binValue, //
+						new DepthAdapter(depth).adapt(), //
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //
+						(options & Options.FORCE) != 0));
 	}
 
 	@SuppressWarnings("rawtypes")
