@@ -35,7 +35,7 @@ import org.eclipse.team.svn.core.connector.SVNProperty;
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableArray;
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.ChangePathAdapter;
-import ru.arsysop.svn.connector.internal.adapt.jhlsv.RevPropertyConverter;
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.RevMapPropertyAdapter;
 
 public final class LogMessageCallbackAdapter extends SvnNullableConstructor<ISVNLogEntryCallback, LogMessageCallback> {
 
@@ -74,7 +74,7 @@ public final class LogMessageCallbackAdapter extends SvnNullableConstructor<ISVN
 									p -> new ChangePathAdapter(p).adapt()).adapt(), //
 							hasChildren);
 				}
-				Map<String, Object> converted = new RevPropertyConverter(revprops).adapt();
+				Map<String, Object> converted = new RevMapPropertyAdapter(revprops).adapt();
 				Date date = converted == null ? null : (Date) converted.get(SVNProperty.BuiltIn.REV_DATE);
 				return new SVNLogEntry(//
 						revision, //

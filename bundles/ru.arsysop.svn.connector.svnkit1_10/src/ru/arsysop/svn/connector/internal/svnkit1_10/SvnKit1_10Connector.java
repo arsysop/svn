@@ -74,6 +74,7 @@ import ru.arsysop.svn.connector.internal.adapt.SvnNullableArray;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.LockNullableAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.MergeInfoAdapter;
 import ru.arsysop.svn.connector.internal.adapt.jhlsv.NodeKindAdapter;
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.RevSvnPropertyAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AnnotationCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.ChoiceAdapter;
@@ -1235,9 +1236,15 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public SVNProperty[] listRevisionProperties(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.listRevisionProperties()");
-		//TODO
-		return null;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("monitor", monitor);
+		return watch.queryAdapt(ISVNCallListener.LIST_REVISION_PROPERTIES, //
+				parameters, //
+				callback(monitor), p -> client.revProperties(//
+						reference.path, //
+						new RevisionAdapter(reference.pegRevision).adapt()),
+				v -> new RevSvnPropertyAdapter(v).adapt());
 	}
 
 	@Override

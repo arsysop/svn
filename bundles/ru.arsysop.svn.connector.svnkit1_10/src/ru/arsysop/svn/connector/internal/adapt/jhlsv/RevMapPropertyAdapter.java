@@ -37,11 +37,11 @@ import org.eclipse.team.svn.core.connector.SVNProperty;
 import ru.arsysop.svn.connector.internal.adapt.RepositoryDateFormat;
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 
-public final class RevPropertyConverter extends SvnNullableConstructor<Map<String, byte[]>, Map<String, Object>> {
+public final class RevMapPropertyAdapter extends SvnNullableConstructor<Map<String, byte[]>, Map<String, Object>> {
 
 	private final DateFormat formatter = new RepositoryDateFormat().get();
 
-	public RevPropertyConverter(Map<String, byte[]> source) {
+	public RevMapPropertyAdapter(Map<String, byte[]> source) {
 		super(source);
 	}
 
