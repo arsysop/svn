@@ -39,7 +39,7 @@ public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 	}
 
 	public String getName() {
-		return String.format("%1$s %2$s %3$s (SVN %4$s compatible, all platforms)", //$NON-NLS-1$
+		return String.format("%1$s %2$s %3$s (SVN %4$s compatible, all platforms)",
 				"SVNKit", //$NON-NLS-1$
 				Version.getShortVersionString(), //
 				Version.getRevisionString(), //
@@ -51,7 +51,9 @@ public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 	}
 
 	public String getClientVersion() {
-		org.apache.subversion.javahl.types.Version version = SVNClientImpl.newInstance().getVersion(); // TODO: nurse this client instance
+		SVNClientImpl onlyask = SVNClientImpl.newInstance();
+		org.apache.subversion.javahl.types.Version version = onlyask.getVersion();
+		onlyask.dispose();
 		return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getPatch()); //$NON-NLS-1$
 	}
 

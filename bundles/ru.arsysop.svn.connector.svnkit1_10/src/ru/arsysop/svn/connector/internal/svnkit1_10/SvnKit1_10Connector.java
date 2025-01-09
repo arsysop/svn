@@ -182,7 +182,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void setNotificationCallback(ISVNNotificationCallback notify) {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("notify", notify);
+		parameters.put("notify", notify); //$NON-NLS-1$
 		notifications.stream().forEach(watch::removeCallback);
 		notifications.clear();
 		notifications.add(notify);
@@ -200,7 +200,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void setConflictResolver(ISVNConflictResolutionCallback listener) {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("listener", listener);
+		parameters.put("listener", listener); //$NON-NLS-1$
 		resolvers.add(listener);
 		watch.commandSafe(ISVNCallListener.SET_CONFLICT_RESOLVER, parameters,
 				p -> client.setConflictResolver(new ConflictResolutionCallbackAdapter(listener).adapt()));
@@ -217,11 +217,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public long checkout(SVNEntryRevisionReference fromReference, String destPath, SVNDepth depth, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("fromReference", fromReference);
-		parameters.put("destPath", destPath);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("fromReference", fromReference); //$NON-NLS-1$
+		parameters.put("destPath", destPath); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryLong(ISVNCallListener.CHECKOUT, //
 				parameters, //
 				callback(monitor), p -> client.checkout(//
@@ -237,10 +237,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void lock(String[] path, String comment, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("comment", comment);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("comment", comment); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.LOCK, //
 				parameters, //
 				callback(monitor), //
@@ -253,9 +253,9 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void unlock(String[] path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.UNLOCK, //
 				parameters, //
 				callback(monitor), //
@@ -268,10 +268,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void add(String path, SVNDepth depth, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.ADD, //
 				parameters, //
 				callback(monitor), //
@@ -288,13 +288,13 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void commit(String[] path, String message, String[] changeLists, SVNDepth depth, long options, Map revProps,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("message", message);
-		parameters.put("changeLists", changeLists);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("revProps", revProps);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("message", message); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		CommitStatusCallback status = new CommitStatusCallback(monitor);
 		watch.commandCallback(ISVNCallListener.COMMIT, //
 				parameters, //
@@ -305,22 +305,22 @@ final class SvnKit1_10Connector implements ISVNConnector {
 						(options & Options.KEEP_LOCKS) != 0, //
 						(options & Options.KEEP_CHANGE_LIST) != 0, //
 						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null), //
-						new RevProps((Map<String, Object>) revProps).adapt(), //
+						new RevProps(revProps).adapt(), //
 						new CommitMessage(message), status),
 				p -> Optional.ofNullable(status.info)//
 				.map(CommitInfo::getPostCommitError)//
-				.ifPresent(e -> p.put("lastPostCommitError", e)));
+				.ifPresent(e -> p.put("lastPostCommitError", e))); //$NON-NLS-1$
 	}
 
 	@Override
 	public long[] update(String[] path, SVNRevision revision, SVNDepth depth, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("revision", revision);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("revision", revision); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryLong(ISVNCallListener.UPDATE, //
 				parameters, //
 				callback(monitor), p -> client.update(//
@@ -337,11 +337,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public long switchTo(String path, SVNEntryRevisionReference toReference, SVNDepth depth, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("toReference", toReference);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("toReference", toReference); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryLong(ISVNCallListener.SWITCH, //
 				parameters, //
 				callback(monitor), p -> client.doSwitch(//
@@ -360,11 +360,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void revert(String[] paths, SVNDepth depth, String[] changeLists, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("paths", paths);
-		parameters.put("depth", depth);
-		parameters.put("changeLists", changeLists);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("paths", paths); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.REVERT, //
 				parameters, //
 				callback(monitor), //
@@ -385,12 +385,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void status(String path, SVNDepth depth, long options, String[] changeLists,
 			ISVNEntryStatusCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("callback", callback);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.STATUS, //
 				parameters, //
 				callback(monitor), //
@@ -408,11 +408,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void relocate(String from, String to, String path, SVNDepth depth, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("from", from);
-		parameters.put("to", to);
-		parameters.put("path", path);
-		parameters.put("depth", depth);
-		parameters.put("monitor", monitor);
+		parameters.put("from", from); //$NON-NLS-1$
+		parameters.put("to", to); //$NON-NLS-1$
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.RELOCATE, //
 				parameters, //
 				callback(monitor), //
@@ -425,9 +425,9 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void cleanup(String path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.CLEANUP, //
 				parameters, //
 				callback(monitor), //
@@ -438,12 +438,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void mergeTwo(SVNEntryRevisionReference reference1, SVNEntryRevisionReference reference2, String localPath,
 			SVNDepth depth, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference1", reference1);
-		parameters.put("reference2", reference2);
-		parameters.put("localPath", localPath);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("reference1", reference1); //$NON-NLS-1$
+		parameters.put("reference2", reference2); //$NON-NLS-1$
+		parameters.put("localPath", localPath); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.MERGE_TWO, //
 				parameters, //
 				callback(monitor), //
@@ -464,12 +464,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void merge(SVNEntryReference reference, SVNRevisionRange[] revisions, String localPath, SVNDepth depth,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("revisions", revisions);
-		parameters.put("localPath", localPath);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("revisions", revisions); //$NON-NLS-1$
+		parameters.put("localPath", localPath); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.MERGE, //
 				parameters, //
 				callback(monitor), //
@@ -493,10 +493,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void mergeReintegrate(SVNEntryReference reference, String localPath, long options,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("localPath", localPath);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("localPath", localPath); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.MERGE_REINTEGRATE, //
 				parameters, //
 				callback(monitor), //
@@ -511,8 +511,8 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public SVNMergeInfo getMergeInfo(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryAdapt(ISVNCallListener.GET_MERGE_INFO, //
 				parameters, //
 				callback(monitor), //
@@ -527,14 +527,14 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			SVNRevisionRange mergeSourceRange, String[] revProps, SVNDepth depth, long options, ISVNLogEntryCallback cb,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("logKind", logKind);
-		parameters.put("reference", reference);
-		parameters.put("mergeSourceReference", mergeSourceReference);
-		parameters.put("mergeSourceRange", mergeSourceRange);
-		parameters.put("revProps", revProps);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("cb", cb);
-		parameters.put("monitor", monitor);
+		parameters.put("logKind", logKind); //$NON-NLS-1$
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("mergeSourceReference", mergeSourceReference); //$NON-NLS-1$
+		parameters.put("mergeSourceRange", mergeSourceRange); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("cb", cb); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		final ISVNLogEntryCallback callback1 = cb;
 		watch.commandLong(ISVNCallListener.LIST_MERGE_INFO_LOG, //
 				parameters, //
@@ -557,8 +557,8 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public String[] suggestMergeSources(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryAdapt(ISVNCallListener.SUGGEST_MERGE_SOURCES, //
 				parameters, //
 				callback(monitor), //
@@ -572,10 +572,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void resolve(String path, Choice conflictResult, SVNDepth depth, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("conflictResult", conflictResult);
-		parameters.put("depth", depth);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("conflictResult", conflictResult); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.RESOLVE, //
 				parameters, //
 				callback(monitor), //
@@ -589,11 +589,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void addToChangeList(String[] paths, String changelist, SVNDepth depth, String[] changeLists,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("paths", paths);
-		parameters.put("changelist", changelist);
-		parameters.put("depth", depth);
-		parameters.put("changeLists", changeLists);
-		parameters.put("monitor", monitor);
+		parameters.put("paths", paths); //$NON-NLS-1$
+		parameters.put("changelist", changelist); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.ADD_TO_CHANGE_LIST, //
 				parameters, //
 				callback(monitor), //
@@ -608,10 +608,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void removeFromChangeLists(String[] paths, SVNDepth depth, String[] changeLists, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("paths", paths);
-		parameters.put("depth", depth);
-		parameters.put("changeLists", changeLists);
-		parameters.put("monitor", monitor);
+		parameters.put("paths", paths); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.REMOVE_FROM_CHANGE_LISTS, //
 				parameters, //
 				callback(monitor), //
@@ -625,11 +625,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void dumpChangeLists(String[] changeLists, String rootPath, SVNDepth depth, ISVNChangeListCallback cb,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("changeLists", changeLists);
-		parameters.put("rootPath", rootPath);
-		parameters.put("depth", depth);
-		parameters.put("cb", cb);
-		parameters.put("monitor", monitor);
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("rootPath", rootPath); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("cb", cb); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.DUMP_CHANGE_LISTS, //
 				parameters, //
 				callback(monitor), //
@@ -646,19 +646,19 @@ final class SvnKit1_10Connector implements ISVNConnector {
 						}));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void importTo(String path, String url, String message, SVNDepth depth, long options, Map revProps,
 			ISVNImportFilterCallback filter, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("url", url);
-		parameters.put("message", message);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("revProps", revProps);
-		parameters.put("filter", filter);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("url", url); //$NON-NLS-1$
+		parameters.put("message", message); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("filter", filter); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		final ISVNImportFilterCallback filter1 = filter;
 		watch.commandLong(ISVNCallListener.IMPORT, //
 				parameters, //
@@ -670,7 +670,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 						(options & Options.INCLUDE_IGNORED) != 0, //
 						(options & Options.IGNORE_AUTOPROPS) != 0, //
 						(options & Options.IGNORE_UNKNOWN_NODE_TYPES) != 0, //
-						new RevProps((Map<String, Object>) revProps).adapt(), //
+						new RevProps(revProps).adapt(), //
 						new ImportFilerCallbackAdapter(filter1).adapt(), //
 						new CommitMessage(message), //
 						new CommitStatusCallback(monitor)));
@@ -680,12 +680,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public long exportTo(SVNEntryRevisionReference fromReference, String destPath, String nativeEOL, SVNDepth depth,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("fromReference", fromReference);
-		parameters.put("destPath", destPath);
-		parameters.put("nativeEOL", nativeEOL);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("fromReference", fromReference); //$NON-NLS-1$
+		parameters.put("destPath", destPath); //$NON-NLS-1$
+		parameters.put("nativeEOL", nativeEOL); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryLong(ISVNCallListener.EXPORT, //
 				parameters, //
 				callback(monitor), p -> client.doExport(//
@@ -704,15 +704,15 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			String fileName, SVNDepth depth, long options, String[] changeLists, long outputOptions,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference1", refPrev);
-		parameters.put("reference2", refNext);
-		parameters.put("relativeToDir", relativeToDir);
-		parameters.put("fileName", fileName);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("outputOptions", outputOptions);
-		parameters.put("monitor", monitor);
+		parameters.put("reference1", refPrev); //$NON-NLS-1$
+		parameters.put("reference2", refNext); //$NON-NLS-1$
+		parameters.put("relativeToDir", relativeToDir); //$NON-NLS-1$
+		parameters.put("fileName", fileName); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("outputOptions", outputOptions); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.DIFF_TWO_FILE, //
 				parameters, //
 				callback(monitor), //
@@ -739,15 +739,15 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			SVNDepth depth, long options, String[] changeLists, long outputOptions, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("range", range);
-		parameters.put("relativeToDir", relativeToDir);
-		parameters.put("fileName", fileName);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("outputOptions", outputOptions);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("range", range); //$NON-NLS-1$
+		parameters.put("relativeToDir", relativeToDir); //$NON-NLS-1$
+		parameters.put("fileName", fileName); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("outputOptions", outputOptions); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.DIFF_FILE, //
 				parameters, //
 				callback(monitor), //
@@ -774,15 +774,15 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			OutputStream stream, SVNDepth depth, long options, String[] changeLists, long outputOptions,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference1", refPrev);
-		parameters.put("reference2", refNext);
-		parameters.put("relativeToDir", relativeToDir);
-		parameters.put("stream", stream);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("outputOptions", Long.valueOf(outputOptions));
-		parameters.put("monitor", monitor);
+		parameters.put("reference1", refPrev); //$NON-NLS-1$
+		parameters.put("reference2", refNext); //$NON-NLS-1$
+		parameters.put("relativeToDir", relativeToDir); //$NON-NLS-1$
+		parameters.put("stream", stream); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("outputOptions", Long.valueOf(outputOptions)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.DIFF_TWO_STREAM, //
 				parameters, //
 				callback(monitor), //
@@ -809,15 +809,15 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			SVNDepth depth, long options, String[] changeLists, long outputOptions, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("range", range);
-		parameters.put("relativeToDir", relativeToDir);
-		parameters.put("stream", stream);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("outputOptions", Long.valueOf(outputOptions));
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("range", range); //$NON-NLS-1$
+		parameters.put("relativeToDir", relativeToDir); //$NON-NLS-1$
+		parameters.put("stream", stream); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("outputOptions", Long.valueOf(outputOptions)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.DIFF_STREAM, //
 				parameters, //
 				callback(monitor), //
@@ -844,13 +844,13 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			long options, String[] changeLists, ISVNDiffStatusCallback cb, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference1", refPrev);
-		parameters.put("reference2", refNext);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("cb", cb);
-		parameters.put("monitor", monitor);
+		parameters.put("reference1", refPrev); //$NON-NLS-1$
+		parameters.put("reference2", refNext); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("cb", cb); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		SVNEntryInfo[] infos = SVNUtility.info(this, refPrev, SVNDepth.EMPTY, monitor);
 		boolean isFile = infos.length > 0 && infos[0] != null && infos[0].kind == SVNEntry.Kind.FILE;
 		DiffSummarized callback = new DiffSummarized(refPrev.path, refNext.path, isFile, cb);
@@ -873,13 +873,13 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void diffStatus(SVNEntryReference reference, SVNRevisionRange range, SVNDepth depth, long options,
 			String[] changeLists, ISVNDiffStatusCallback cb, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("range", range);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("cb", cb);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("range", range); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("cb", cb); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		SVNEntryInfo[] infos = SVNUtility.info(this, new SVNEntryRevisionReference(reference, range.from),
 				SVNDepth.EMPTY, monitor);
 		boolean isFile = infos.length > 0 && infos[0] != null && infos[0].kind == SVNEntry.Kind.FILE;
@@ -925,10 +925,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public SVNProperty[] streamFileContent(SVNEntryRevisionReference reference, long options, OutputStream stream,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("stream", stream);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("stream", stream); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.STREAM_FILE_CONTENT, //
 				parameters, //
 				callback(monitor), //
@@ -940,16 +940,16 @@ final class SvnKit1_10Connector implements ISVNConnector {
 		return null;
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void mkdir(String[] path, String message, long options, Map revProps, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("message", message);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("revProps", revProps);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("message", message); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.MKDIR, parameters, callback(monitor), p -> client.mkdir(//
 				new HashSet<>(Arrays.asList(path)), //
 				(options & Options.INCLUDE_PARENTS) != 0, //
@@ -962,10 +962,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void moveLocal(String[] srcPaths, String dstPath, long options, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("srcPaths", srcPaths);
-		parameters.put("dstPath", dstPath);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("srcPaths", srcPaths); //$NON-NLS-1$
+		parameters.put("dstPath", dstPath); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.MOVE_LOCAL, parameters, callback(monitor), p -> client.move(//
 				new HashSet<>(Arrays.asList(srcPaths)), //
 				dstPath, //
@@ -979,17 +979,17 @@ final class SvnKit1_10Connector implements ISVNConnector {
 				null));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void moveRemote(String[] srcPaths, String dstPath, String message, long options, Map revProps,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("srcPaths", srcPaths);
-		parameters.put("dstPath", dstPath);
-		parameters.put("message", message);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("revProps", revProps);
-		parameters.put("monitor", monitor);
+		parameters.put("srcPaths", srcPaths); //$NON-NLS-1$
+		parameters.put("dstPath", dstPath); //$NON-NLS-1$
+		parameters.put("message", message); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.MOVE_REMOTE, parameters, callback(monitor), p -> client.move(//
 				new LinkedHashSet<>(Arrays.asList(srcPaths)), //
 				dstPath, //
@@ -1008,11 +1008,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 			Map<String, List<SVNExternalReference>> externalsToPin, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("srcPaths", srcPaths);
-		parameters.put("destPath", destPath);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("externalsToPin", externalsToPin);
-		parameters.put("monitor", monitor);
+		parameters.put("srcPaths", srcPaths); //$NON-NLS-1$
+		parameters.put("destPath", destPath); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("externalsToPin", externalsToPin); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.COPY_LOCAL, parameters, callback(monitor), p -> client.copy(//
 				Arrays.asList(new SvnNullableArray<>(srcPaths, CopySource[]::new,
 						s -> new RevisionReverenceAdapter(s).adapt()).adapt()), //
@@ -1025,19 +1025,19 @@ final class SvnKit1_10Connector implements ISVNConnector {
 				null));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void copyRemote(SVNEntryRevisionReference[] srcPaths, String destPath, String message, long options,
 			Map revProps, Map<String, List<SVNExternalReference>> externalsToPin, ISVNProgressMonitor monitor)
 					throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("srcPaths", srcPaths);
-		parameters.put("destPath", destPath);
-		parameters.put("message", message);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("revProps", revProps);
-		parameters.put("externalsToPin", externalsToPin);
-		parameters.put("monitor", monitor);
+		parameters.put("srcPaths", srcPaths); //$NON-NLS-1$
+		parameters.put("destPath", destPath); //$NON-NLS-1$
+		parameters.put("message", message); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("externalsToPin", externalsToPin); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.COPY_REMOTE, parameters, callback(monitor), p -> client.copy(//
 				Arrays.asList(new SvnNullableArray<>(srcPaths, CopySource[]::new,
 						s -> new RevisionReverenceAdapter(s).adapt()).adapt()), //
@@ -1052,9 +1052,9 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void removeLocal(String[] path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.REMOVE_LOCAL, parameters, callback(monitor), p -> client.remove(//
 				new HashSet<>(Arrays.asList(path)), //
 				(options & Options.FORCE) != 0, //
@@ -1064,16 +1064,16 @@ final class SvnKit1_10Connector implements ISVNConnector {
 				null));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void removeRemote(String[] path, String message, long options, Map revProps, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("message", message);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("revProps", revProps);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("message", message); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.REMOVE_REMOTE, parameters, callback(monitor), p -> client.remove(//
 				new HashSet<>(Arrays.asList(path)), //
 				(options & Options.FORCE) != 0, false, //
@@ -1113,12 +1113,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void annotate(SVNEntryReference reference, SVNRevisionRange revisionRange, long options, long diffOptions,
 			ISVNAnnotationCallback callback, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("revisionRange", revisionRange);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("diffOptions", Long.valueOf(diffOptions));
-		parameters.put("callback", callback);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("revisionRange", revisionRange); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("diffOptions", Long.valueOf(diffOptions)); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		final ISVNAnnotationCallback cb = callback;
 		watch.commandLong(ISVNCallListener.ANNOTATE, parameters, callback(monitor), //
 				p -> client.blame(//
@@ -1214,10 +1214,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public SVNProperty getProperty(SVNEntryRevisionReference reference, String name, String[] changeLists,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("name", name);
-		parameters.put("changeLists", changeLists);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("name", name); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryAdapt(ISVNCallListener.GET_PROPERTY, //
 				parameters, //
 				callback(monitor), p -> client.propertyGet(//
@@ -1233,12 +1233,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void setPropertyLocal(String[] path, SVNProperty property, SVNDepth depth, long options,
 			String[] changeLists, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("property", property);
-		parameters.put("depth", depth);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("changeLists", changeLists);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("property", property); //$NON-NLS-1$
+		parameters.put("depth", depth); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("changeLists", changeLists); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.SET_PROPERTY_LOCAL, parameters, callback(monitor), //
 				p -> client.propertySetLocal(//
 						new HashSet<>(Arrays.asList(path)), //
@@ -1249,17 +1249,17 @@ final class SvnKit1_10Connector implements ISVNConnector {
 						(options & Options.FORCE) != 0));
 	}
 
-	@SuppressWarnings("rawtypes")
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override
 	public void setPropertyRemote(SVNEntryReference reference, SVNProperty property, String message, long options,
 			Map revProps, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("property", property);
-		parameters.put("message", message);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("revProps", revProps);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("property", property); //$NON-NLS-1$
+		parameters.put("message", message); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("revProps", revProps); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.SET_PROPERTY_REMOTE, parameters, callback(monitor), //
 				p -> client.propertySetRemote(//
 						reference.path, //
@@ -1276,8 +1276,8 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public SVNProperty[] listRevisionProperties(SVNEntryReference reference, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryAdapt(ISVNCallListener.LIST_REVISION_PROPERTIES, //
 				parameters, //
 				callback(monitor), p -> client.revProperties(//
@@ -1290,9 +1290,9 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public SVNProperty getRevisionProperty(SVNEntryReference reference, String name, ISVNProgressMonitor monitor)
 			throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("name", name);
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("name", name); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		return watch.queryAdapt(ISVNCallListener.GET_REVISION_PROPERTY, //
 				parameters, //
 				callback(monitor), p -> client.revProperty(//
@@ -1306,11 +1306,11 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void setRevisionProperty(SVNEntryReference reference, SVNProperty property, String originalValue,
 			long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("reference", reference);
-		parameters.put("property", property);
-		parameters.put("originalValue", originalValue);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("reference", reference); //$NON-NLS-1$
+		parameters.put("property", property); //$NON-NLS-1$
+		parameters.put("originalValue", originalValue); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.SET_REVISION_PROPERTY, parameters, callback(monitor),
 				p -> client.setRevProperty(//
 						reference.path, //
@@ -1324,8 +1324,8 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void upgrade(String path, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.UPGRADE, parameters, callback(monitor), //
 				p -> client.upgrade(//
 						path));
@@ -1335,12 +1335,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	public void patch(String patchPath, String targetPath, int stripCount, long options, ISVNPatchCallback callback,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("patchPath", patchPath);
-		parameters.put("targetPath", targetPath);
-		parameters.put("stripCount", Integer.valueOf(stripCount));
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("callback", callback);
-		parameters.put("monitor", monitor);
+		parameters.put("patchPath", patchPath); //$NON-NLS-1$
+		parameters.put("targetPath", targetPath); //$NON-NLS-1$
+		parameters.put("stripCount", Integer.valueOf(stripCount)); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("callback", callback); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		watch.commandLong(ISVNCallListener.PATCH, parameters, callback(monitor), //
 				p -> client.patch(//
 						patchPath, //
@@ -1356,9 +1356,9 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void vacuum(String path, long options, ISVNProgressMonitor monitor) throws SVNConnectorException {
 		Map<String, Object> parameters = new HashMap<>();
-		parameters.put("path", path);
-		parameters.put("options", Long.valueOf(options));
-		parameters.put("monitor", monitor);
+		parameters.put("path", path); //$NON-NLS-1$
+		parameters.put("options", Long.valueOf(options)); //$NON-NLS-1$
+		parameters.put("monitor", monitor); //$NON-NLS-1$
 		//FIXME: AF: currently option constants are not defined, let's perform maximum cleanup
 		watch.commandLong(ISVNCallListener.VACUUM, parameters, callback(monitor), //
 				p -> client.vacuum(//
