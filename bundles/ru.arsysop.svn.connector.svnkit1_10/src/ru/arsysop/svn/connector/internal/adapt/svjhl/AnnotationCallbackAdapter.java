@@ -32,7 +32,7 @@ import org.eclipse.team.svn.core.connector.SVNAnnotationData;
 import org.eclipse.team.svn.core.connector.SVNProperty;
 
 import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
-import ru.arsysop.svn.connector.internal.adapt.jhlsv.RevPropertyConverter;
+import ru.arsysop.svn.connector.internal.adapt.jhlsv.RevMapPropertyAdapter;
 
 public final class AnnotationCallbackAdapter extends SvnNullableConstructor<ISVNAnnotationCallback, BlameCallback> {
 
@@ -46,8 +46,8 @@ public final class AnnotationCallbackAdapter extends SvnNullableConstructor<ISVN
 
 			public void singleLine(long number, long revision, Map<String, byte[]> irp, long mrevision,
 					Map<String, byte[]> imp, String mpath, String line, boolean localChange) throws ClientException {
-				Map<String, Object> orp = new RevPropertyConverter(irp).adapt();
-				Map<String, Object> omp = new RevPropertyConverter(imp).adapt();
+				Map<String, Object> orp = new RevMapPropertyAdapter(irp).adapt();
+				Map<String, Object> omp = new RevMapPropertyAdapter(imp).adapt();
 				source.annotate(line, new SVNAnnotationData(//
 						number, //
 						localChange, //
