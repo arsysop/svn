@@ -6,7 +6,7 @@
 [![Hits-of-Code](https://hitsofcode.com/github/arsysop/svn?branch=main)](https://hitsofcode.com/githubarsysop/svn?branch=main/view?branch=main)
 
 ###### License 
-Copyright � 2023, 2025 ArSysOp and others
+Copyright (c) 2023, 2025 ArSysOp
 
 [![Apache License 2.0](https://img.shields.io/badge/Apache--2.0-thistle.svg)](https://github.com/arsysop/svn/blob/main/LICENSE) 
 
