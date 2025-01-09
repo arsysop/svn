@@ -1034,8 +1034,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 				(options & Options.INCLUDE_PARENTS) != 0, //
 				false, //
 				new RevProps(revProps).adapt(), //
-				new CommitMessage(message),
-				new CommitStatusCallback(monitor)));
+				new CommitMessage(message), new CommitStatusCallback(monitor)));
 	}
 
 	@Override
@@ -1202,9 +1201,20 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public SVNProperty getProperty(SVNEntryRevisionReference reference, String name, String[] changeLists,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		//TODO
-		System.out.println("SvnKit1_10Connector.getProperty()");
-		return null;
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("name", name);
+		parameters.put("changeLists", changeLists);
+		parameters.put("monitor", monitor);
+		return watch.queryAdapt(ISVNCallListener.GET_PROPERTY, //
+				parameters, //
+				callback(monitor), p -> client.propertyGet(//
+						reference.path, //
+						name, //
+						new RevisionAdapter(reference.revision).adapt(),
+						new RevisionAdapter(reference.pegRevision).adapt(),
+						Optional.ofNullable(changeLists).map(Arrays::asList).orElse(null)),
+				v -> Optional.ofNullable(v).map(data -> new SVNProperty(name, data)).orElse(null));
 	}
 
 	@Override
