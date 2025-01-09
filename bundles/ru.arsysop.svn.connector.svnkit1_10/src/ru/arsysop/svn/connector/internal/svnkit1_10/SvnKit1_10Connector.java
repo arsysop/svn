@@ -85,6 +85,7 @@ import ru.arsysop.svn.connector.internal.adapt.svjhl.InfoCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.InheritedCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.LogKindAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.LogMessageCallbackAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.PatchCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.PropertyCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionRangeAdapter;
@@ -1323,8 +1324,23 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void patch(String patchPath, String targetPath, int stripCount, long options, ISVNPatchCallback callback,
 			ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.patch()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("patchPath", patchPath);
+		parameters.put("targetPath", targetPath);
+		parameters.put("stripCount", Integer.valueOf(stripCount));
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("callback", callback);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.PATCH, parameters, callback(monitor), //
+				p -> client.patch(//
+						patchPath, //
+						targetPath, //
+						(options & Options.SIMULATE) != 0, //
+						stripCount, //
+						(options & Options.REVERSE) != 0, //
+						(options & Options.IGNORE_WHITESPACE) != 0, //
+						(options & Options.REMOVE_TEMPORARY_FILES) != 0, //
+						new PatchCallbackAdapter(callback).adapt()));
 	}
 
 	@Override
