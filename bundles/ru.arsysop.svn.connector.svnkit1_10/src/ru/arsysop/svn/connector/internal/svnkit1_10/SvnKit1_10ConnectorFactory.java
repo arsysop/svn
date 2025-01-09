@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2023, 2024 ArSysOp
+ * Copyright (c) 2023, 2025 ArSysOp
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,15 +31,15 @@ import org.tmatesoft.svn.util.Version;
 public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 
 	public ISVNConnector createConnector() {
-		return new SvnKit1_10Connector();
+		return new SvnKit1_10Connector(String.format("SVNKit %s Connector", Version.getShortVersionString()));
 	}
 
 	public ISVNManager createManager() {
-		return new SvnKit1_10Manager();
+		return new SvnKit1_10Manager(String.format("SVNKit %s Manager", Version.getShortVersionString()));
 	}
 
 	public String getName() {
-		return String.format("%1$s %2$s %3$s (SVN %4$s compatible, all platforms)", //$NON-NLS-1$
+		return String.format("%1$s %2$s %3$s (SVN %4$s compatible, all platforms)",
 				"SVNKit", //$NON-NLS-1$
 				Version.getShortVersionString(), //
 				Version.getRevisionString(), //
@@ -51,7 +51,9 @@ public final class SvnKit1_10ConnectorFactory implements ISVNConnectorFactory {
 	}
 
 	public String getClientVersion() {
-		org.apache.subversion.javahl.types.Version version = SVNClientImpl.newInstance().getVersion(); // TODO: nurse this client instance
+		SVNClientImpl onlyask = SVNClientImpl.newInstance();
+		org.apache.subversion.javahl.types.Version version = onlyask.getVersion();
+		onlyask.dispose();
 		return String.format("%s.%s.%s", version.getMajor(), version.getMinor(), version.getPatch()); //$NON-NLS-1$
 	}
 
