@@ -1312,8 +1312,12 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void upgrade(String path, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.upgrade()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("path", path);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.UPGRADE, parameters, callback(monitor), //
+				p -> client.upgrade(//
+						path));
 	}
 
 	@Override
