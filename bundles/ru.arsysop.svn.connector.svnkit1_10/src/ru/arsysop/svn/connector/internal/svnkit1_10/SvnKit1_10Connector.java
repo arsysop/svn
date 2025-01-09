@@ -78,6 +78,7 @@ import ru.arsysop.svn.connector.internal.adapt.jhlsv.RevSvnPropertyAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AdaptClientNotifyCallback;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.AnnotationCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.ChoiceAdapter;
+import ru.arsysop.svn.connector.internal.adapt.svjhl.ConflictResolutionCallbackAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DepthAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.DiffOptionsAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.ImportFilerCallbackAdapter;
@@ -92,7 +93,6 @@ import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionRangeAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.RevisionReverenceAdapter;
 import ru.arsysop.svn.connector.internal.adapt.svjhl.StatusCallbackAdapter;
 
-//TODO
 final class SvnKit1_10Connector implements ISVNConnector {
 
 	private final CallWatch watch;
@@ -101,6 +101,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	private final List<ISVNNotificationCallback> notifications = new ArrayList<>();
 //FIXME: AF: not sure why do we need this
 	private final List<ISVNConfigurationEventHandler> handlers = new ArrayList<>();
+	private final List<ISVNConflictResolutionCallback> resolvers = new ArrayList<>();
 
 	SvnKit1_10Connector(String name) {
 		SVNFileUtil.setSleepForTimestamp(false);// not time to relax
@@ -198,15 +199,18 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void setConflictResolver(ISVNConflictResolutionCallback listener) {
-		System.out.println("SvnKit1_10Connector.setConflictResolver()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("listener", listener);
+		resolvers.add(listener);
+		watch.commandSafe(ISVNCallListener.SET_CONFLICT_RESOLVER, parameters,
+				p -> client.setConflictResolver(new ConflictResolutionCallbackAdapter(listener).adapt()));
 	}
 
 	@Override
 	public ISVNConflictResolutionCallback getConflictResolver() {
-		System.out.println("SvnKit1_10Connector.getConflictResolver()");
-		//TODO
-		return null;
+		return watch.querySafe(ISVNCallListener.GET_CONFLICT_RESOLVER, //
+				Collections.emptyMap(), //
+				p -> resolvers.stream().findAny().orElse(null));
 	}
 
 	@Override
