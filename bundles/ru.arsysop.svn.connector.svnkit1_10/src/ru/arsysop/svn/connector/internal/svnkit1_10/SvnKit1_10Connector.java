@@ -1228,8 +1228,23 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void setPropertyRemote(SVNEntryReference reference, SVNProperty property, String message, long options,
 			Map revProps, ISVNProgressMonitor monitor) throws SVNConnectorException {
-		System.out.println("SvnKit1_10Connector.setPropertyRemote()");
-		//TODO
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("reference", reference);
+		parameters.put("property", property);
+		parameters.put("message", message);
+		parameters.put("options", Long.valueOf(options));
+		parameters.put("revProps", revProps);
+		parameters.put("monitor", monitor);
+		watch.commandLong(ISVNCallListener.SET_PROPERTY_REMOTE, parameters, callback(monitor), //
+				p -> client.propertySetRemote(//
+						reference.path, //
+						((SVNRevision.Number) reference.pegRevision).getNumber(), //
+						property.name, //
+						property.binValue, //
+						new CommitMessage(message), //
+						(options & Options.FORCE) != 0, //
+						new RevProps(revProps).adapt(), //
+						new CommitStatusCallback(monitor)));
 	}
 
 	@Override
