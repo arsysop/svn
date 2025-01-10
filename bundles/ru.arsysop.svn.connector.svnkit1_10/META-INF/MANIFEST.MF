@@ -7,6 +7,17 @@ Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-11
 Import-Package: de.regnis.q.sequence.line;version="1.0.4",
+ net.jpountz.lz4,
+ net.jpountz.util,
+ net.jpountz.util.darwin.x86_64,
+ net.jpountz.util.linux.aarch64,
+ net.jpountz.util.linux.amd64,
+ net.jpountz.util.linux.i386,
+ net.jpountz.util.linux.ppc64le,
+ net.jpountz.util.linux.s390x,
+ net.jpountz.util.win32.amd64,
+ net.jpountz.xxhash,
+ org.antlr.runtime;version="[3.5.0,4.0.0)",
  org.apache.subversion.javahl;version="1.10.11",
  org.apache.subversion.javahl.callback;version="1.10.11",
  org.apache.subversion.javahl.types;version="1.10.11",
