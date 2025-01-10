@@ -26,16 +26,16 @@ import java.util.Date;
 import org.apache.subversion.javahl.types.Revision;
 import org.eclipse.team.svn.core.connector.SVNRevision;
 
-import ru.arsysop.svn.connector.internal.adapt.SvnTypeConstructor;
+import ru.arsysop.svn.connector.internal.adapt.SvnNullableConstructor;
 
-public final class RevisionAdapter extends SvnTypeConstructor<SVNRevision, Revision> {
+public final class RevisionAdapter extends SvnNullableConstructor<SVNRevision, Revision> {
 
 	public RevisionAdapter(SVNRevision revision) {
 		super(revision);
 	}
 
 	@Override
-	public org.apache.subversion.javahl.types.Revision adapt() {
+	public org.apache.subversion.javahl.types.Revision adapt(SVNRevision source) {
 		switch (source.getKind()) {
 			case BASE:
 				return org.apache.subversion.javahl.types.Revision.BASE;
