@@ -23,7 +23,7 @@
 <feature
       id="ru.arsysop.svn.license.feature"
       label="ArSysOp SVN License Feature"
-      version="0.1.0.qualifier"
+      version="1.0.0.qualifier"
       provider-name="ArSysOp">
 
    <description>
@@ -31,7 +31,7 @@
    </description>
 
    <copyright>
-      Copyright (c) 2020-2023 ArSysOp
+      Copyright (c) 2020-2025 ArSysOp
    </copyright>
 
    <license url="%licenseURL">
