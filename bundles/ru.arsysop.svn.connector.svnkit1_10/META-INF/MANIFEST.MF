@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: ru.arsysop.svn.connector.svnkit1_10
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: ru.arsysop.svn.connector.svnkit1_10;singleton:=true
-Bundle-Version: 0.1.0.qualifier
+Bundle-Version: 1.0.0.qualifier
 Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor
 Bundle-RequiredExecutionEnvironment: JavaSE-11

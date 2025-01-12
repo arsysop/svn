@@ -31,7 +31,7 @@
 	<parent>
 		<groupId>ru.arsysop.svn</groupId>
 		<artifactId>ru.arsysop.svn.parent</artifactId>
-		<version>0.1.0-SNAPSHOT</version>
+		<version>1.0.0-SNAPSHOT</version>
 		<relativePath>./releng/ru.arsysop.svn.parent</relativePath>
 	</parent>
 	<modules>

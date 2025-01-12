@@ -5,6 +5,12 @@
 [![Build Status](https://github.com/arsysop/svn/workflows/CI/badge.svg)](https://github.com/arsysop/svn/actions)
 [![Hits-of-Code](https://hitsofcode.com/github/arsysop/svn?branch=main)](https://hitsofcode.com/githubarsysop/svn?branch=main/view?branch=main)
 
+###### Installation 
+
+1. Open Eclipse Install wizard via "Help -> Install New Software"
+2. Add `https://arsysop.github.io/svn/release/` to Location field
+3. Complete the wizard
+
 ###### License 
 Copyright (c) 2023, 2025 ArSysOp
 
