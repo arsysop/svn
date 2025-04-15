@@ -131,8 +131,10 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void setConfigDirectory(String directory) throws SVNConnectorException {
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("configDir", directory); //$NON-NLS-1$
 		watch.commandFast(ISVNCallListener.SET_CONFIG_DIRECTORY, //
-				Map.of("configDir", directory), // //$NON-NLS-1$
+				parameters, //
 				p -> client.setConfigDirectory(directory));
 	}
 
@@ -152,13 +154,15 @@ final class SvnKit1_10Connector implements ISVNConnector {
 
 	@Override
 	public void setUsername(String username) {
-		Map<String, Object> parameters = Map.of("username", username); //$NON-NLS-1$
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("username", username); //$NON-NLS-1$
 		watch.commandSafe(ISVNCallListener.SET_USERNAME, parameters, p -> client.username(username));
 	}
 
 	@Override
 	public void setPassword(String password) {
-		Map<String, Object> parameters = Map.of("password", password); //$NON-NLS-1$
+		Map<String, Object> parameters = new HashMap<>();
+		parameters.put("password", password); //$NON-NLS-1$
 		watch.commandSafe(ISVNCallListener.SET_PASSWORD, parameters, p -> client.password(password));
 	}
 
