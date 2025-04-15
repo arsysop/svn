@@ -159,7 +159,7 @@ final class SvnKit1_10Connector implements ISVNConnector {
 	@Override
 	public void setPassword(String password) {
 		Map<String, Object> parameters = Map.of("password", password); //$NON-NLS-1$
-		watch.commandSafe(ISVNCallListener.SET_PASSWORD, parameters, p -> client.username(password));
+		watch.commandSafe(ISVNCallListener.SET_PASSWORD, parameters, p -> client.password(password));
 	}
 
 	@Override
