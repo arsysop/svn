@@ -77,11 +77,12 @@ public final class InfoNullableAdapter extends SvnNullableConstructor<Info, SVNE
 	}
 
 	private SVNConflictDescriptor[] conflictDescriptors(Info info) {
-		return Optional.ofNullable(info.getConflicts())
-				.orElseGet(Collections::emptySet)
-				.stream()
-				.map(ConflictDescriptorNullableAdapter::new)
-				.collect(Collectors.toList())
+		return Optional.ofNullable(info.getConflicts()) //
+				.orElseGet(Collections::emptySet) //
+				.stream() //
+				.map(ConflictDescriptorNullableAdapter::new) //
+				.map(ConflictDescriptorNullableAdapter::adapt) //
+				.collect(Collectors.toList()) //
 				.toArray(new SVNConflictDescriptor[0]);
 	}
 
