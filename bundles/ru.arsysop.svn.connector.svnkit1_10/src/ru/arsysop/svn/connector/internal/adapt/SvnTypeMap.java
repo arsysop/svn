@@ -22,16 +22,15 @@
 package ru.arsysop.svn.connector.internal.adapt;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 public abstract class SvnTypeMap<S, T> implements SvnTypeAdapter<S, T> {
 
-	private final S source;
+	private final Optional<S> source;
 	private final Map<S, T> map;
 
 	protected SvnTypeMap(S source) {
-		this.source = Objects.requireNonNull(source);
+		this.source = Optional.ofNullable(source);
 		map = fill();
 	}
 
@@ -39,7 +38,7 @@ public abstract class SvnTypeMap<S, T> implements SvnTypeAdapter<S, T> {
 
 	@Override
 	public final T adapt() {
-		return Optional.ofNullable(map.get(source)).orElseGet(this::defaults);
+		return source.map(map::get).orElseGet(this::defaults);
 	}
 
 	protected abstract T defaults();
