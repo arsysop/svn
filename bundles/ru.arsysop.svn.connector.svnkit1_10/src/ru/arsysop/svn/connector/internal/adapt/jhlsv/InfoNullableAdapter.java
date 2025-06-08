@@ -24,7 +24,6 @@ package ru.arsysop.svn.connector.internal.adapt.jhlsv;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.apache.subversion.javahl.types.Info;
 import org.eclipse.team.svn.core.connector.SVNConflictDescriptor;
@@ -82,8 +81,7 @@ public final class InfoNullableAdapter extends SvnNullableConstructor<Info, SVNE
 				.stream() //
 				.map(ConflictDescriptorNullableAdapter::new) //
 				.map(ConflictDescriptorNullableAdapter::adapt) //
-				.collect(Collectors.toList()) //
-				.toArray(new SVNConflictDescriptor[0]);
+				.toArray(SVNConflictDescriptor[]::new);
 	}
 
 }
