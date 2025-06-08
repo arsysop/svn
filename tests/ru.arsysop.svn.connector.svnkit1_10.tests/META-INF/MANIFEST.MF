@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Automatic-Module-Name: ru.arsysop.svn.connector.svnkit1_10.tests
 Bundle-ManifestVersion: 2
 Bundle-SymbolicName: ru.arsysop.svn.connector.svnkit1_10.tests;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.0.1.qualifier
 Bundle-ClassPath: .
 Bundle-Name: %Bundle-Name
 Bundle-Vendor: %Bundle-Vendor

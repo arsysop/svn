@@ -22,7 +22,7 @@
 <feature
       id="ru.arsysop.svn.connectors.svnkit1_10.feature"
       label="%feature.name"
-      version="1.0.0.qualifier"
+      version="1.0.1.qualifier"
       provider-name="%feature.vendor"
       license-feature="ru.arsysop.svn.license.feature"
       license-feature-version="1.0.0.qualifier">
