@@ -1,6 +1,6 @@
 # svn
 
-[SVNKit](https://svnkit.com/) 1.10 connector for [Eclipse Subverive](https://eclipse.dev/subversive/)
+[SVNKit](https://svnkit.com/) 1.10 connector for [Eclipse Subversive](https://eclipse.dev/subversive/)
 
 [![Build Status](https://github.com/arsysop/svn/workflows/CI/badge.svg)](https://github.com/arsysop/svn/actions)
 [![Hits-of-Code](https://hitsofcode.com/github/arsysop/svn?branch=main)](https://hitsofcode.com/githubarsysop/svn?branch=main/view?branch=main)
